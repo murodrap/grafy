@@ -10,8 +10,6 @@ class SpracujCele {
     int n;
     int pocetBeziacich = 0;
     int maxBeziacich = 500;
-    std::string suborZ;
-    long pocetGrafov;
 
     
     using Hrany = std::vector<std::vector<int>>;
@@ -32,13 +30,11 @@ class SpracujCele {
 
 
 public:
-    SpracujCele(std::string nazov, int reg2, int n2, long pocet)
-    : suborZ(nazov)
-    , reg(reg2)
+    SpracujCele(int reg2, int n2)
+    : reg(reg2)
     , n(n2)
-    , pocetGrafov(pocet)
     {
-    }
+    };
     void celySubor();
     
     

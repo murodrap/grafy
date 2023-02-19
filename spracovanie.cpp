@@ -10,14 +10,7 @@
 #include <fstream>
 #include "VypocetKostier.h"
 #include "spracovanie.h"
-/*
 
-    using Riadky = std::vector<std::string>;
-    
-    
-    void celySubor();
-
-*/
 using Hrany = std::vector<std::vector<int>>;
 
 void SpracujCele::kontrolaHodnot(long pocet, const Hrany& hrany) {
@@ -143,29 +136,36 @@ void SpracujCele::jedenGraf(const Riadky& graf) {
 
 void SpracujCele::celySubor() {
     
-    std::ifstream subor;
-    subor.open (suborZ);
-    if (!subor.is_open()) {
-        std::cout << "nepodarilo sa otvorit a spracovat subor";
-        return;
-    }
+
     Riadky vrcholy(n);
     long spracovanych = 0;
     int index = 0;
     std::string riadok;
-    while (getline(subor, riadok) && spracovanych < pocetGrafov) {
-        vrcholy.at(index) = riadok;
-        index++;
-        if (index == n) {
-            //spracovanie grafu
-            jedenGraf(vrcholy);
-            index = 0;
-            spracovanych++;
-            if((spracovanych % 10000) == 0)
-                std::cout << spracovanych << "\n";
+    bool zacatyGraf = false;
+    while (std::getline(std::cin, riadok)) {
+        if (riadok[0] == 'G') {
+            zacatyGraf = true;
+        }
+        else if (!zacatyGraf || riadok.size() == 0) {
+            continue;
+        }
+        
+        else if (zacatyGraf){
+            vrcholy.at(index) = riadok;
+            index++;
+            if (index == n) {
+                //spracovanie grafu
+                jedenGraf(vrcholy);
+                index = 0;
+                spracovanych++;
+                zacatyGraf = false;
+                if((spracovanych % 10000) == 0) {
+                    std::cout << spracovanych << "\n";
+                }
+            }
         }
     }
-    subor.close();
+
     zapisDoSUboru();
 
 }
