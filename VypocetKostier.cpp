@@ -45,38 +45,22 @@ long VypocetKostier::gauss(Matica& matica, int n) {
 
             for (int i = r1; i < n; i++) {
                 hodnoty[i-r1] = {(double)std::abs(matica[i][s1]), (double)i};
-                // //vnutro.reserve;
-                // vnutro[0] = (double)std::abs(matica[i][s1]);
-                // vnutro[1] = (double)i;
-                // hodnoty[i-r1] = vnutro;
             }
             iMax = maxH(hodnoty);
             
-            if (matica[iMax][s1] == 0) { // r1 15 s1 15
+            if (matica[iMax][s1] == 0) {
                 s1++;
             }
 
             else {
                 std::swap(matica[r1], matica[iMax]);
-                //if (r1 == 6 || r1 == 7 || iMax == 6 || iMax == 7) {
-                    //std::cout <<  r1 << " " << s1 <<" 76: " << matica[7][6] << " 66: " << matica[6][6] << " iMax "<< iMax <<"\n";
-                //}
-                //std::cout << r1 << " " << s1 << " imax: " << iMax <<  " " << matica[r1] << " " << matica[iMax] <<"\n";
                 nas *= -1;
-                //std::cout <<"d " << r1 << " " << s1 << "\n";
 
                 for (int i = r1+1; i < n; i++) {
                     double f = matica[i][s1] / matica[r1][s1];
                     matica[i][s1] = 0.;
-                    //std::cout << "  " << i << " " << s1 <<  " f: "  << f <<"\n";
                     for (int j = s1+1; j < n; j++) {
-                        //std::cout << "    j: " << j << " r1j: " << matica[r1][j] << "\n";
                         matica[i][j] -= matica[r1][j] * f;
-                        //if ((i == 7 && j == 6) || (i == 6 && j == 6)) {
-                            //std::cout <<  r1 << " " << s1 <<" 76: " << matica[7][6] << " 66: " << matica[6][6] << " ij " << i << " " << j << "\n";
-                        //}
-                        
-                        //std::cout << "      " << matica[i][j] << "\n";
                     }
                 }
 
@@ -88,7 +72,6 @@ long VypocetKostier::gauss(Matica& matica, int n) {
         double vysl = 1.;
         for (int i = 0; i < n; i++) {
             vysl *= matica[i][i];
-            //std::cout << "a " << vysl << "\n";
         }
 
     return abs(round(vysl));
