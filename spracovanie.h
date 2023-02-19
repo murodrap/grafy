@@ -1,0 +1,45 @@
+#pragma once
+#include <stdio.h>
+#include <vector>
+#include <climits>
+#include <string>
+
+
+class SpracujCele {
+    int reg;
+    int n;
+    int pocetBeziacich = 0;
+    int maxBeziacich = 500;
+    std::string suborZ;
+    long pocetGrafov;
+
+    
+    using Hrany = std::vector<std::vector<int>>;
+    std::vector<Hrany> maxG;
+    std::vector<Hrany> minG;
+    long maxK = 1;
+    long minK = LONG_MAX;
+    void kontrolaHodnot(long pocet, const Hrany& hrany);
+    
+    using Riadky = std::vector<std::string>;
+    Hrany spracujGraf(const Riadky& riadky);
+    void jedenGraf(const Riadky& graf);
+    long podlaVzorca();
+
+    void grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
+    void zapisDoSUboru();
+
+
+
+public:
+    SpracujCele(std::string nazov, int reg2, int n2, long pocet)
+    : suborZ(nazov)
+    , reg(reg2)
+    , n(n2)
+    , pocetGrafov(pocet)
+    {
+    }
+    void celySubor();
+    
+    
+};
