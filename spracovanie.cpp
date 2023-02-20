@@ -9,6 +9,7 @@
 #include <fstream>
 #include "VypocetKostier.h"
 #include "spracovanie.h"
+#include "oneapi/tbb/parallel_pipeline.h"
 
 using Hrany = std::vector<std::vector<int>>;
 
@@ -127,43 +128,73 @@ void SpracujCele::zapisDoSUboru() {
         std::cout << "Unepodarilo sa vytvorit subor a zapisat donho vysledky";
     }
 }
-void SpracujCele::jedenGraf(const Riadky& graf) {
+std::pair<long, Hrany> SpracujCele::jedenGraf(Riadky graf) {
     Hrany hrany = spracujGraf(graf);
     long kostrier = VypocetKostier::celkovyVypocet(hrany, reg, n);
-    kontrolaHodnot(kostrier, hrany);
+    
+    return std::make_pair(kostrier, hrany);
 }
 
 void SpracujCele::celySubor() {
-    
+
 
     Riadky vrcholy(n);
     long spracovanych = 0;
     int index = 0;
     std::string riadok;
     bool zacatyGraf = false;
-    while (std::getline(std::cin, riadok)) {
-        if (riadok[0] == 'G') {
-            zacatyGraf = true;
-        }
-        else if (!zacatyGraf || riadok.size() == 0) {
-            continue;
-        }
-        
-        else if (zacatyGraf){
-            vrcholy.at(index) = riadok;
-            index++;
-            if (index == n) {
-                //spracovanie grafu
-                jedenGraf(vrcholy);
-                index = 0;
-                spracovanych++;
-                zacatyGraf = false;
-                if((spracovanych % 10000) == 0) {
-                    std::cout << spracovanych << "\n";
-                }
+
+    oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/4,
+        oneapi::tbb::make_filter<void,Riadky>(
+            oneapi::tbb::filter_mode::serial_in_order,
+            [&](oneapi::tbb::flow_control& fc)-> Riadky{
+                
+                while (std::getline(std::cin, riadok)) {
+                    if (riadok[0] == 'G') {
+                        zacatyGraf = true;
+                    }
+                    else if (!zacatyGraf || riadok.size() == 0) {
+                        continue;
+                    }
+                    
+                    else if (zacatyGraf){
+                        vrcholy.at(index) = riadok;
+                        index++;
+                        if (index == n) {
+                            //spracovanie grafu
+                            
+                            index = 0;
+                            spracovanych++;
+                            zacatyGraf = false;
+                            if((spracovanych % 10000) == 0) {
+                                std::cout << spracovanych << "\n";
+                            }
+                            ///////////////jedenGraf(vrcholy);
+                            return vrcholy;
+                        }
+                    }
+                 }
+                fc.stop();
+                return Riadky();
             }
-        }
-    }
+        ) &
+        oneapi::tbb::make_filter<Riadky,std::pair<long, Hrany>>(
+            oneapi::tbb::filter_mode::parallel,
+            [this](Riadky riadky){
+                return jedenGraf(riadky);
+            }    
+        ) &
+        oneapi::tbb::make_filter<std::pair<long, Hrany>,void>(
+            oneapi::tbb::filter_mode::serial_in_order,
+            [this](std::pair<long, Hrany> pocetGraf) {
+                kontrolaHodnot(pocetGraf.first, pocetGraf.second);
+            }
+        )
+    );
+
+    
+
+    
 
     zapisDoSUboru();
 

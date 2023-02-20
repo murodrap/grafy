@@ -3,6 +3,7 @@
 #include <vector>
 #include <climits>
 #include <string>
+#include <tuple>
 
 
 class SpracujCele {
@@ -21,7 +22,7 @@ class SpracujCele {
     
     using Riadky = std::vector<std::string>;
     Hrany spracujGraf(const Riadky& riadky);
-    void jedenGraf(const Riadky& graf);
+    std::pair<long, Hrany> jedenGraf(Riadky graf);
     long podlaVzorca();
 
     void grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
