@@ -21,8 +21,8 @@ class SpracujCele {
     void kontrolaHodnot(long pocet, const Hrany& hrany);
     
     using Riadky = std::vector<std::string>;
-    Hrany spracujGraf(const Riadky& riadky);
-    std::pair<long, Hrany> jedenGraf(Riadky graf);
+    Hrany* spracujGraf(const Riadky& riadky);
+    std::pair<long, Hrany*> jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
     void grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);

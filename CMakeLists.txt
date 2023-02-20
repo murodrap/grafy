@@ -30,7 +30,6 @@ target_link_directories(pocitanieKostier
 
 target_link_libraries(pocitanieKostier
     tbb
-
 )
 
 

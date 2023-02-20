@@ -54,8 +54,8 @@ long SpracujCele::podlaVzorca() {
     return trunc(pow(24, 2)) * stvorkove;
 }
 
-Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
-    Hrany hrany(n*reg/2);
+Hrany* SpracujCele::spracujGraf(const Riadky& riadky) {
+    Hrany* hrany = new Hrany(n*reg/2);
     int index = 0;
     for (const std::string& riadok : riadky) {
         std::stringstream ss(riadok);
@@ -81,10 +81,7 @@ Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
             //std::cout << "sus " << sused << "--\n";
             int u = stoi(sused);
             if (u > v) {
-                std::vector<int> hrana(2);
-                hrana[0] = v - 1;
-                hrana[1] = u - 1;
-                hrany[index] = hrana;
+                hrany->at(index) = {v - 1, u - 1};
                 index++;
             }
         }
@@ -128,9 +125,9 @@ void SpracujCele::zapisDoSUboru() {
         std::cout << "Unepodarilo sa vytvorit subor a zapisat donho vysledky";
     }
 }
-std::pair<long, Hrany> SpracujCele::jedenGraf(Riadky graf) {
-    Hrany hrany = spracujGraf(graf);
-    long kostrier = VypocetKostier::celkovyVypocet(hrany, reg, n);
+std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
+    Hrany* hrany = spracujGraf(graf);
+    long kostrier = VypocetKostier::celkovyVypocet(*hrany, reg, n);
     
     return std::make_pair(kostrier, hrany);
 }
@@ -138,16 +135,18 @@ std::pair<long, Hrany> SpracujCele::jedenGraf(Riadky graf) {
 void SpracujCele::celySubor() {
 
 
-    Riadky vrcholy(n);
     long spracovanych = 0;
-    int index = 0;
-    std::string riadok;
+    
+    
     bool zacatyGraf = false;
 
     oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/4,
-        oneapi::tbb::make_filter<void,Riadky>(
+        oneapi::tbb::make_filter<void,Riadky*>(
             oneapi::tbb::filter_mode::serial_in_order,
-            [&](oneapi::tbb::flow_control& fc)-> Riadky{
+            [&](oneapi::tbb::flow_control& fc)-> Riadky* {
+                Riadky* vrcholy = new Riadky(n);
+                int index = 0;
+                std::string riadok;
                 
                 while (std::getline(std::cin, riadok)) {
                     if (riadok[0] == 'G') {
@@ -158,7 +157,7 @@ void SpracujCele::celySubor() {
                     }
                     
                     else if (zacatyGraf){
-                        vrcholy.at(index) = riadok;
+                        vrcholy->at(index) = riadok;
                         index++;
                         if (index == n) {
                             //spracovanie grafu
@@ -175,19 +174,22 @@ void SpracujCele::celySubor() {
                     }
                  }
                 fc.stop();
-                return Riadky();
+                return nullptr;
             }
         ) &
-        oneapi::tbb::make_filter<Riadky,std::pair<long, Hrany>>(
+        oneapi::tbb::make_filter<Riadky*,std::pair<long, Hrany*>>(
             oneapi::tbb::filter_mode::parallel,
-            [this](Riadky riadky){
-                return jedenGraf(riadky);
+            [this](Riadky* riadky){
+                auto vysledok = jedenGraf(*riadky);
+                delete riadky;
+                return vysledok;
             }    
         ) &
-        oneapi::tbb::make_filter<std::pair<long, Hrany>,void>(
+        oneapi::tbb::make_filter<std::pair<long, Hrany*>,void>(
             oneapi::tbb::filter_mode::serial_in_order,
-            [this](std::pair<long, Hrany> pocetGraf) {
-                kontrolaHodnot(pocetGraf.first, pocetGraf.second);
+            [this](std::pair<long, Hrany*> pocetGraf) {
+                kontrolaHodnot(pocetGraf.first, *pocetGraf.second);
+                delete pocetGraf.second;
             }
         )
     );
