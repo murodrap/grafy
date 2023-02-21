@@ -7,6 +7,8 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <chrono>
+
 #include "VypocetKostier.h"
 #include "spracovanie.h"
 
@@ -134,6 +136,7 @@ void SpracujCele::jedenGraf(const Riadky& graf) {
 }
 
 void SpracujCele::celySubor() {
+    auto start = std::chrono::high_resolution_clock::now();
     
 
     Riadky vrcholy(n);
@@ -144,6 +147,8 @@ void SpracujCele::celySubor() {
     while (std::getline(std::cin, riadok)) {
         if (riadok[0] == 'G') {
             zacatyGraf = true;
+            
+            
         }
         else if (!zacatyGraf || riadok.size() == 0) {
             continue;
@@ -154,13 +159,21 @@ void SpracujCele::celySubor() {
             index++;
             if (index == n) {
                 //spracovanie grafu
+                auto stop = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                std::cout << "generovanie: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
+                start = std::chrono::high_resolution_clock::now();
                 jedenGraf(vrcholy);
+                stop = std::chrono::high_resolution_clock::now();
+                duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                std::cout << "spracovanie: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
                 index = 0;
                 spracovanych++;
                 zacatyGraf = false;
-                if((spracovanych % 10000) == 0) {
-                    std::cout << spracovanych << "\n";
-                }
+                start = std::chrono::high_resolution_clock::now();
+                //if((spracovanych % 10000) == 0) {
+                //    std::cout << spracovanych << "\n";
+                //}
             }
         }
     }
