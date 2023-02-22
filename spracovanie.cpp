@@ -11,6 +11,10 @@
 #include "spracovanie.h"
 #include "oneapi/tbb/parallel_pipeline.h"
 
+
+#include <chrono>
+using namespace std::chrono;
+
 using Hrany = std::vector<std::vector<int>>;
 
 void SpracujCele::kontrolaHodnot(long pocet, const Hrany& hrany) {
@@ -139,11 +143,16 @@ void SpracujCele::celySubor() {
     
     
     bool zacatyGraf = false;
+    //auto start = high_resolution_clock::now();
+    //auto stop = high_resolution_clock::now();
 
     oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/4,
         oneapi::tbb::make_filter<void,Riadky*>(
             oneapi::tbb::filter_mode::serial_in_order,
             [&](oneapi::tbb::flow_control& fc)-> Riadky* {
+                //stop = high_resolution_clock::now();
+                //auto duration = duration_cast<microseconds>(stop - start);
+                //std::cout << "generovanie: " << duration_cast<microseconds>(stop - start).count() << std::endl;
                 Riadky* vrcholy = new Riadky(n);
                 int index = 0;
                 std::string riadok;
@@ -165,10 +174,11 @@ void SpracujCele::celySubor() {
                             index = 0;
                             spracovanych++;
                             zacatyGraf = false;
-                            if((spracovanych % 10000) == 0) {
-                                std::cout << spracovanych << "\n";
-                            }
+                            //if((spracovanych % 10000) == 0) {
+                            //    std::cout << spracovanych << "\n";
+                            //}
                             ///////////////jedenGraf(vrcholy);
+                            //start = high_resolution_clock::now();
                             return vrcholy;
                         }
                     }
