@@ -139,7 +139,7 @@ std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
 void SpracujCele::celySubor() {
 
 
-    long spracovanych = 0;
+    //long this.spracovanych = 0;
     
     
     bool zacatyGraf = false;
@@ -172,11 +172,9 @@ void SpracujCele::celySubor() {
                             //spracovanie grafu
                             
                             index = 0;
-                            spracovanych++;
+                            
                             zacatyGraf = false;
-                            //if((spracovanych % 10000) == 0) {
-                            //    std::cout << spracovanych << "\n";
-                            //}
+                            
                             ///////////////jedenGraf(vrcholy);
                             //start = high_resolution_clock::now();
                             return vrcholy;
@@ -199,6 +197,10 @@ void SpracujCele::celySubor() {
             oneapi::tbb::filter_mode::serial_in_order,
             [this](std::pair<long, Hrany*> pocetGraf) {
                 kontrolaHodnot(pocetGraf.first, *pocetGraf.second);
+                spracovanych++;
+                //if((spracovanych % 10000) == 0) {
+                //    std::cout << spracovanych << "\n";
+                //}
                 delete pocetGraf.second;
             }
         )

@@ -11,6 +11,7 @@ class SpracujCele {
     int n;
     int pocetBeziacich = 0;
     int maxBeziacich = 500;
+    long spracovanych = 0;
 
     
     using Hrany = std::vector<std::vector<int>>;
