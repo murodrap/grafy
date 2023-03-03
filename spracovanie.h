@@ -13,6 +13,12 @@ class SpracujCele {
     int maxBeziacich = 500;
     long spracovanych = 0;
 
+    bool zacatyGraf = false;
+    int pocetGrafov = 10000;
+    int nacitanychGrafov = 0;
+    int nacitanychGrafov2 = pocetGrafov;
+    bool koniec = false;
+
     
     using Hrany = std::vector<std::vector<int>>;
     std::vector<Hrany> maxG;
@@ -20,9 +26,13 @@ class SpracujCele {
     long maxK = 1;
     long minK = LONG_MAX;
     void kontrolaHodnot(long pocet, const Hrany& hrany);
+    void kontrolaMin(long pocet, std::vector<Hrany*> grafy);
+    void kontrolaMax(long pocet, std::vector<Hrany*> grafy);
     
     using Riadky = std::vector<std::string>;
+    
     Hrany* spracujGraf(const Riadky& riadky);
+    //std::pair<std::pair<long, Hrany*>, std::pair<long, Hrany*>> skupinaGrafov(std::vector<Riadky* riadky>* grafy);
     std::pair<long, Hrany*> jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
