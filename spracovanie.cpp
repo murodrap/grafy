@@ -44,47 +44,6 @@ void SpracujCele::kontrolaHodnot(long pocet, const Hrany& hrany) {
 
 }
 
-void SpracujCele::kontrolaMin(long pocet, std::vector<Hrany*> grafy) {
-    //std::cout << "kostier " << pocet << "\n"; 
-    if (pocet == minK) {
-        for (auto hrany : grafy) {
-            minG.push_back(*hrany);
-        }
-        //minG.insert(minG.end(),grafy.begin(),grafy.end());
-    }
-
-    if (pocet < minK) {
-        minK = pocet;
-        minG.clear();
-        //minG.insert(minG.end(),grafy.begin(),grafy.end());
-        for (auto hrany : grafy) {
-            minG.push_back(*hrany);
-        }
-    }
-
-}
-
-void SpracujCele::kontrolaMax(long pocet, std::vector<Hrany*> grafy) {
-    //std::cout << "kostier " << pocet << "\n"; 
-
-    if (pocet == maxK) {
-        //maxG.insert(maxG.end(),grafy.begin(),grafy.end());
-        for (auto hrany : grafy) {
-            maxG.push_back(*hrany);
-        }
-    }
-
-    if (pocet > maxK) {
-        maxK = pocet;
-        maxG.clear();
-        //maxG.insert(maxG.end(),grafy.begin(),grafy.end());
-        for (auto hrany : grafy) {
-            maxG.push_back(*hrany);
-        }
-    }
-
-}
-
 
 
 long SpracujCele::podlaVzorca() {
@@ -116,11 +75,8 @@ Hrany* SpracujCele::spracujGraf(const Riadky& riadky) {
         vrch.pop_back();
         getline(ss, susedia, ':');
         susedia.erase(0, 1);
-        //std::cout << riadok << "--" << vrch << "--\n";
-        //std::cout << vrch << " ttt " << susedia;
-        
+
         int v = stoi(vrch);
-        //std::cout << v << "\n";
         std::string sused;  
         std::stringstream ss2(susedia);
         while (!ss2.eof()) {
@@ -185,25 +141,12 @@ std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
 
 void SpracujCele::celySubor() {
 
-
-    //long this.spracovanych = 0;
-    
-    
-    
-    //auto start = high_resolution_clock::now();
-    //auto stop = high_resolution_clock::now();
-
     oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/6,
         oneapi::tbb::make_filter<void,std::pair<SkupinaGrafov*, int>>(
             oneapi::tbb::filter_mode::serial_out_of_order,
             [this](oneapi::tbb::flow_control& fc)-> std::pair<SkupinaGrafov*, int> {
                 
-                //stop = high_resolution_clock::now();
-                //auto duration = duration_cast<microseconds>(stop - start);
-                //std::cout << "generovanie: " << duration_cast<microseconds>(stop - start).count() << std::endl;
-                
                 SkupinaGrafov* grafy = new SkupinaGrafov(pocetGrafov);
-                //std::cout << "nove spustenie " << grafy->size() << std::endl;
                 Riadky vrcholy(n);
                 int index = 0;
                 std::string riadok;
@@ -221,26 +164,17 @@ void SpracujCele::celySubor() {
                         vrcholy[index] = riadok;
                         index++;
                         if (index == n) {
-                            //spracovanie grafu
                             
                             index = 0;
                             
                             zacatyGraf = false;
                             
-                            
-                            ///////////////jedenGraf(vrcholy);
-                            //start = high_resolution_clock::now();
-                            //std::cout << nacitanychGrafov << " " << grafy->size()<< std::endl;
                             grafy->at(nacitanychGrafov) = std::move(vrcholy);
                             vrcholy = Riadky(n);
                             nacitanychGrafov++;
-                            //std::cout << nacitanychGrafov<< std::endl;
                             if (nacitanychGrafov == pocetGrafov) {
-                                //nacitanychGrafov = 0;
-                                
                                 return std::make_pair(grafy, pocetGrafov);
                             }
-                            //return vrcholy;
                         }
                     }
                  }
@@ -262,8 +196,6 @@ void SpracujCele::celySubor() {
                 for (int i  = 0; i < grafyPocet.second; i++) {
                     
                     auto vysledok = jedenGraf(grafy->at(i));
-                    //std::cout << "   " << vysledok.first << std::endl;
-                    //spracovaneGrafy->at(i) = vysledok;
                     spracovaneGrafy->push_back(vysledok);
                 }
                 delete grafy;
@@ -274,9 +206,6 @@ void SpracujCele::celySubor() {
             oneapi::tbb::filter_mode::serial_out_of_order,
             [this](std::vector<std::pair<long, Hrany*>>* poctyGrafy) {
                 for (int i  = 0; i < poctyGrafy->size(); i++) {
-                    //if (poctyGrafy->at(i)) {
-                    //    break;
-                    //}
                     kontrolaHodnot(poctyGrafy->at(i).first, *poctyGrafy->at(i).second);
                     delete poctyGrafy->at(i).second;
                 }
@@ -284,10 +213,7 @@ void SpracujCele::celySubor() {
 
 
                 spracovanych+= pocetGrafov;
-                //if((spracovanych % 10000) == 0) {
                    std::cout << spracovanych << "\n";
-                //}
-                //delete pocetGraf.second;
             }
         )
     );

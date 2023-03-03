@@ -16,7 +16,6 @@ class SpracujCele {
     bool zacatyGraf = false;
     int pocetGrafov = 10000;
     int nacitanychGrafov = 0;
-    int nacitanychGrafov2 = pocetGrafov;
     bool koniec = false;
 
     
@@ -26,9 +25,6 @@ class SpracujCele {
     long maxK = 1;
     long minK = LONG_MAX;
     void kontrolaHodnot(long pocet, const Hrany& hrany);
-    void kontrolaMin(long pocet, std::vector<Hrany*> grafy);
-    void kontrolaMax(long pocet, std::vector<Hrany*> grafy);
-    
     using Riadky = std::vector<std::string>;
     
     Hrany* spracujGraf(const Riadky& riadky);
