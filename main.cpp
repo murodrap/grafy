@@ -6,8 +6,13 @@
 
 int main(int argc, char *argv[])
 {
-    
-    SpracujCele* spr = new SpracujCele(std::atoi(argv[2]), std::atoi(argv[1]));
+    SpracujCele* spr;
+    if (argc == 4) {
+        spr = new SpracujCele(std::atoi(argv[2]), std::atoi(argv[1]), std::atoi(argv[2]));
+    }
+    else {
+        spr = new SpracujCele(std::atoi(argv[2]), std::atoi(argv[1]), std::atoi(argv[2]), std::atoi(argv[3]));
+    }
     spr->celySubor();
     
     return 0;

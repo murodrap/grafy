@@ -14,9 +14,11 @@ class SpracujCele {
     long spracovanych = 0;
 
     bool zacatyGraf = false;
-    int pocetGrafov = 10000;
+    int pocetGrafov;
     int nacitanychGrafov = 0;
     bool koniec = false;
+    int maxSucasneSpracovanych;
+
 
     
     using Hrany = std::vector<std::vector<int>>;
@@ -38,9 +40,11 @@ class SpracujCele {
 
 
 public:
-    SpracujCele(int reg2, int n2)
+    SpracujCele(int reg2, int n2, int maxSucasneSPracovanych2, int pocetGrafov2 = 10000)
     : reg(reg2)
     , n(n2)
+    , maxSucasneSpracovanych(maxSucasneSPracovanych2)
+    , pocetGrafov(pocetGrafov2)
     {
     };
     void celySubor();

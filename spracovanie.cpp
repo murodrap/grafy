@@ -141,7 +141,7 @@ std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
 
 void SpracujCele::celySubor() {
 
-    oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/6,
+    oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/maxSucasneSpracovanych,
         oneapi::tbb::make_filter<void,std::pair<SkupinaGrafov*, int>>(
             oneapi::tbb::filter_mode::serial_out_of_order,
             [this](oneapi::tbb::flow_control& fc)-> std::pair<SkupinaGrafov*, int> {
