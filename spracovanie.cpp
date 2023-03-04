@@ -213,7 +213,7 @@ void SpracujCele::celySubor() {
 
 
                 spracovanych+= pocetGrafov;
-                   std::cout << spracovanych << "\n";
+                std::cout << spracovanych << "\n";
             }
         )
     );

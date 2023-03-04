@@ -4,6 +4,7 @@
 #include <climits>
 #include <string>
 #include <tuple>
+#include <iostream>
 
 
 class SpracujCele {
@@ -46,6 +47,7 @@ public:
     , maxSucasneSpracovanych(maxSucasneSPracovanych2)
     , pocetGrafov(pocetGrafov2)
     {
+            std::cout << reg << " grafy na " << n << " vrcholoch, sucasne " << maxSucasneSpracovanych << ", po kusoch " << pocetGrafov << std::endl;
     };
     void celySubor();
     
