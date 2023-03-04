@@ -156,7 +156,7 @@ void SpracujCele::celySubor() {
                     if (riadok[0] == 'G') {
                         zacatyGraf = true;
                     }
-                    else if (!zacatyGraf || riadok.size() == 0) {
+                    else if (!zacatyGraf || riadok.empty()) {
                         continue;
                     }
                     
