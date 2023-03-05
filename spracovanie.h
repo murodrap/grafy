@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include <iostream>
+#include <fstream>
 #include "oneapi/tbb/parallel_pipeline.h"
 
 
@@ -21,6 +22,8 @@ class SpracujCele {
     bool koniec = false;
     int maxSucasneSpracovanych;
 
+    mutable std::ifstream subor;
+
 
     
     using Hrany = std::vector<std::vector<int>>;
@@ -31,6 +34,7 @@ class SpracujCele {
     long maxK = 1;
     long minK = LONG_MAX;
     void kontrolaHodnot(long pocet, const Hrany& hrany);
+    std::string suborZ;
     
     
     Hrany* spracujGraf(const Riadky& riadky);
@@ -48,13 +52,14 @@ class SpracujCele {
 
 
 public:
-    SpracujCele(int reg2, int n2, int maxSucasneSPracovanych2, int pocetGrafov2 = 10000)
-    : reg(reg2)
+    SpracujCele(std::string subor, int reg2, int n2, int maxSucasneSPracovanych2, int pocetGrafov2 = 10000)
+    : suborZ(subor)
+    , reg(reg2)
     , n(n2)
     , maxSucasneSpracovanych(maxSucasneSPracovanych2)
     , pocetGrafov(pocetGrafov2)
     {
-            std::cout << reg << " grafy na " << n << " vrcholoch, sucasne " << maxSucasneSpracovanych << ", po kusoch " << pocetGrafov << std::endl;
+            std::cout << reg << "-regularne grafy na " << n << " vrcholoch, sucasne " << maxSucasneSpracovanych << ", po kusoch " << pocetGrafov << std::endl;
     };
     void celySubor();
     

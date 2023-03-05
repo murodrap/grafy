@@ -116,7 +116,7 @@ void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<H
 
 void SpracujCele::zapisDoSUboru() {
     std::stringstream kamUkladat;
-    kamUkladat << "maxMinReg" << reg << "-" << n << ".txt";
+    kamUkladat << "out-" << suborZ << ".txt";
     std::ofstream subor;
     subor.open (kamUkladat.str());
     if (subor.is_open()) {
@@ -138,13 +138,22 @@ std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
 }
 
 std::pair<SkupinaGrafov*, int> SpracujCele::citanie(oneapi::tbb::flow_control& fc) {
+
+    if (koniec) {
+        fc.stop();
+        return std::pair<SkupinaGrafov*, int>();
+    }
+
     SkupinaGrafov* grafy = new SkupinaGrafov(pocetGrafov);
     Riadky vrcholy(n);
     int index = 0;
     std::string riadok;
     nacitanychGrafov = 0;
+
     
-    while (std::getline(std::cin, riadok)) {
+    
+    while (std::getline(subor, riadok)) {
+        //std::cout << riadok << std::endl;
         if (riadok[0] == 'G') {
             zacatyGraf = true;
         }
@@ -169,11 +178,8 @@ std::pair<SkupinaGrafov*, int> SpracujCele::citanie(oneapi::tbb::flow_control& f
                 }
             }
         }
-        }
-    if (koniec) {
-        fc.stop();
-        return std::pair<SkupinaGrafov*, int>();
     }
+
     koniec = true;
     return std::make_pair(grafy, nacitanychGrafov);
 }
@@ -199,12 +205,20 @@ void SpracujCele::vyhodnocovanie(std::vector<std::pair<long, Hrany*>>* poctyGraf
     delete poctyGrafy;
 
     spracovanych+= pocetGrafov;
-    std::cout << spracovanych << "\n";
+    //std::cout << spracovanych << "\n";
 }
 
 
 
 void SpracujCele::celySubor() {
+
+    //std::ifstream subor;
+    subor.open(suborZ);
+    if (!subor.is_open()) {
+        std::cout << "nepodarilo sa otvorit a spracovat subor " << suborZ << std::endl;
+        exit(1);
+        //return std::pair<SkupinaGrafov*, int>();
+    }
 
     oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/maxSucasneSpracovanych,
         oneapi::tbb::make_filter<void,std::pair<SkupinaGrafov*, int>>(
@@ -226,10 +240,7 @@ void SpracujCele::celySubor() {
             }
         )
     );
-
-    
-
-    
+    //std::cout << "ide sa zapisovat do suboru\n";
 
     zapisDoSUboru();
 
