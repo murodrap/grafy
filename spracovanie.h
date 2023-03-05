@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include <iostream>
+#include "oneapi/tbb/parallel_pipeline.h"
 
 
 class SpracujCele {
@@ -23,12 +24,14 @@ class SpracujCele {
 
     
     using Hrany = std::vector<std::vector<int>>;
+    using Riadky = std::vector<std::string>;
+    using SkupinaGrafov = std::vector<Riadky>;
     std::vector<Hrany> maxG;
     std::vector<Hrany> minG;
     long maxK = 1;
     long minK = LONG_MAX;
     void kontrolaHodnot(long pocet, const Hrany& hrany);
-    using Riadky = std::vector<std::string>;
+    
     
     Hrany* spracujGraf(const Riadky& riadky);
     //std::pair<std::pair<long, Hrany*>, std::pair<long, Hrany*>> skupinaGrafov(std::vector<Riadky* riadky>* grafy);
@@ -37,6 +40,10 @@ class SpracujCele {
 
     void grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
     void zapisDoSUboru();
+
+    std::pair<SkupinaGrafov*, int> citanie(oneapi::tbb::flow_control& fc);
+    std::vector<std::pair<long, Hrany*>>* spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet);
+    void vyhodnocovanie(std::vector<std::pair<long, Hrany*>>* poctyGrafy);
 
 
 

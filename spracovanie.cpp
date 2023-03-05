@@ -12,8 +12,6 @@
 #include "oneapi/tbb/parallel_pipeline.h"
 
 
-#include <chrono>
-using namespace std::chrono;
 
 using Riadky = std::vector<std::string>;
 using SkupinaGrafov = std::vector<Riadky>;
@@ -139,81 +137,92 @@ std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
     return std::make_pair(kostrier, hrany);
 }
 
+std::pair<SkupinaGrafov*, int> SpracujCele::citanie(oneapi::tbb::flow_control& fc) {
+    SkupinaGrafov* grafy = new SkupinaGrafov(pocetGrafov);
+    Riadky vrcholy(n);
+    int index = 0;
+    std::string riadok;
+    nacitanychGrafov = 0;
+    
+    while (std::getline(std::cin, riadok)) {
+        if (riadok[0] == 'G') {
+            zacatyGraf = true;
+        }
+        else if (!zacatyGraf || riadok.empty()) {
+            continue;
+        }
+        
+        else if (zacatyGraf){
+            vrcholy[index] = riadok;
+            index++;
+            if (index == n) {
+                
+                index = 0;
+                
+                zacatyGraf = false;
+                
+                grafy->at(nacitanychGrafov) = std::move(vrcholy);
+                vrcholy = Riadky(n);
+                nacitanychGrafov++;
+                if (nacitanychGrafov == pocetGrafov) {
+                    return std::make_pair(grafy, pocetGrafov);
+                }
+            }
+        }
+        }
+    if (koniec) {
+        fc.stop();
+        return std::pair<SkupinaGrafov*, int>();
+    }
+    koniec = true;
+    return std::make_pair(grafy, nacitanychGrafov);
+}
+
+std::vector<std::pair<long, Hrany*>>* SpracujCele::spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet) {
+    auto grafy = grafyPocet.first;
+    std::vector<std::pair<long, Hrany*>>* spracovaneGrafy = new std::vector<std::pair<long, Hrany*>>();
+    spracovaneGrafy->reserve(grafyPocet.second);
+
+    for (int i  = 0; i < grafyPocet.second; i++) {
+        
+        auto vysledok = jedenGraf(grafy->at(i));
+        spracovaneGrafy->push_back(vysledok);
+    }
+    delete grafy;
+    return spracovaneGrafy;
+}
+void SpracujCele::vyhodnocovanie(std::vector<std::pair<long, Hrany*>>* poctyGrafy) {
+    for (int i  = 0; i < poctyGrafy->size(); i++) {
+        kontrolaHodnot(poctyGrafy->at(i).first, *poctyGrafy->at(i).second);
+        delete poctyGrafy->at(i).second;
+    }   
+    delete poctyGrafy;
+
+    spracovanych+= pocetGrafov;
+    std::cout << spracovanych << "\n";
+}
+
+
+
 void SpracujCele::celySubor() {
 
     oneapi::tbb::parallel_pipeline( /*max_number_of_live_token=*/maxSucasneSpracovanych,
         oneapi::tbb::make_filter<void,std::pair<SkupinaGrafov*, int>>(
             oneapi::tbb::filter_mode::serial_out_of_order,
             [this](oneapi::tbb::flow_control& fc)-> std::pair<SkupinaGrafov*, int> {
-                
-                SkupinaGrafov* grafy = new SkupinaGrafov(pocetGrafov);
-                Riadky vrcholy(n);
-                int index = 0;
-                std::string riadok;
-                nacitanychGrafov = 0;
-                
-                while (std::getline(std::cin, riadok)) {
-                    if (riadok[0] == 'G') {
-                        zacatyGraf = true;
-                    }
-                    else if (!zacatyGraf || riadok.empty()) {
-                        continue;
-                    }
-                    
-                    else if (zacatyGraf){
-                        vrcholy[index] = riadok;
-                        index++;
-                        if (index == n) {
-                            
-                            index = 0;
-                            
-                            zacatyGraf = false;
-                            
-                            grafy->at(nacitanychGrafov) = std::move(vrcholy);
-                            vrcholy = Riadky(n);
-                            nacitanychGrafov++;
-                            if (nacitanychGrafov == pocetGrafov) {
-                                return std::make_pair(grafy, pocetGrafov);
-                            }
-                        }
-                    }
-                 }
-                if (koniec) {
-                    fc.stop();
-                    return std::pair<SkupinaGrafov*, int>();
-                }
-                koniec = true;
-                return std::make_pair(grafy, nacitanychGrafov);
+                return citanie(fc);
             }
         ) &
         oneapi::tbb::make_filter<std::pair<SkupinaGrafov*, int>,std::vector<std::pair<long, Hrany*>>*>(
             oneapi::tbb::filter_mode::parallel,
             [this](std::pair<SkupinaGrafov*, int> grafyPocet){
-                auto grafy = grafyPocet.first;
-                std::vector<std::pair<long, Hrany*>>* spracovaneGrafy = new std::vector<std::pair<long, Hrany*>>();
-                spracovaneGrafy->reserve(grafyPocet.second);
-
-                for (int i  = 0; i < grafyPocet.second; i++) {
-                    
-                    auto vysledok = jedenGraf(grafy->at(i));
-                    spracovaneGrafy->push_back(vysledok);
-                }
-                delete grafy;
-                return spracovaneGrafy;
+                return spracovanieSkupiny(grafyPocet);
             }    
         ) &
         oneapi::tbb::make_filter<std::vector<std::pair<long, Hrany*>>*,void>(
             oneapi::tbb::filter_mode::serial_out_of_order,
             [this](std::vector<std::pair<long, Hrany*>>* poctyGrafy) {
-                for (int i  = 0; i < poctyGrafy->size(); i++) {
-                    kontrolaHodnot(poctyGrafy->at(i).first, *poctyGrafy->at(i).second);
-                    delete poctyGrafy->at(i).second;
-                }
-                delete poctyGrafy;
-
-
-                spracovanych+= pocetGrafov;
-                std::cout << spracovanych << "\n";
+                vyhodnocovanie(poctyGrafy);
             }
         )
     );
