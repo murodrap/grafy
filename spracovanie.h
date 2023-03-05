@@ -43,11 +43,14 @@ class SpracujCele {
     long podlaVzorca();
 
     void grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
+    void grafyDoSuboru(std::string typ, long pocet, const std::vector<std::string>& grafy, std::ofstream& subor);
     void zapisDoSUboru();
 
     std::pair<SkupinaGrafov*, int> citanie(oneapi::tbb::flow_control& fc);
     std::vector<std::pair<long, Hrany*>>* spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet);
     void vyhodnocovanie(std::vector<std::pair<long, Hrany*>>* poctyGrafy);
+    std::pair<long, const std::vector<std::string>> nacitanieVyslPreTyp(std::ifstream& subor);
+    
 
 
 
@@ -62,6 +65,7 @@ public:
             std::cout << reg << "-regularne grafy na " << n << " vrcholoch, sucasne " << maxSucasneSpracovanych << ", po kusoch " << pocetGrafov << std::endl;
     };
     void celySubor();
+    void vyhodnotenieVysledkovSubory();
     
     
 };

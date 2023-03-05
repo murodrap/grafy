@@ -94,7 +94,7 @@ Hrany* SpracujCele::spracujGraf(const Riadky& riadky) {
 }
 
 void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor) {
-    subor << typ << " " << pocet << "\n";
+    subor << typ << " " << grafy.size() << " " << pocet << "\n";
         
     for (const Hrany& graf : grafy) {
         subor << "[";
@@ -114,6 +114,15 @@ void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<H
 
 }
 
+void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<std::string>& grafy, std::ofstream& subor) {
+    subor << typ << " " << grafy.size() << " " << pocet << "\n";
+        
+    for (const std::string& graf: grafy) {
+        subor << graf << std::endl;
+    }
+
+}
+
 void SpracujCele::zapisDoSUboru() {
     std::stringstream kamUkladat;
     kamUkladat << "out-" << suborZ << ".txt";
@@ -128,6 +137,84 @@ void SpracujCele::zapisDoSUboru() {
     else {
         std::cout << "Unepodarilo sa vytvorit subor a zapisat donho vysledky";
     }
+}
+
+std::pair<long, const std::vector<std::string>> SpracujCele::nacitanieVyslPreTyp(std::ifstream& subor) {
+    std::string riadok;
+    std::getline(subor, riadok);
+    std::istringstream iss(riadok);
+    std::string typ;
+    int pocetG;
+    long kostier;
+    iss >> typ;
+    iss >> pocetG;
+    iss >> kostier;
+    std::vector<std::string> grafy = std::vector<std::string>(pocetG);
+    for (int j = 0; j < pocetG; j++) {
+        std::getline(subor, riadok);
+        grafy[j] = std::move(riadok);
+    }
+    return std::make_pair(kostier, std::move(grafy));
+}
+
+void SpracujCele::vyhodnotenieVysledkovSubory() {
+    std::vector<std::string> minZoSuborov;
+    std::vector<std::string> maxZoSuborov;
+    std::ifstream subor;
+    for (int i = 1; i <= maxSucasneSpracovanych; i++) {
+        std::stringstream meno;
+        meno << suborZ << "-" << i << ".txt";
+        subor.open(meno.str());
+        //std::cout << meno.str() << std::endl;
+        if (!subor.is_open()) {
+            std::cout << "nepodarilo sa otvorit subor " << meno.str() << std::endl;
+            return;
+        }
+
+        std::pair<long, const std::vector<std::string>> vyslMin = nacitanieVyslPreTyp(subor);
+        long kostier = vyslMin.first;
+        const std::vector<std::string>& hrany = vyslMin.second;
+        
+        if (kostier == minK) {
+            for (const std::string& g : hrany) {
+                minZoSuborov.push_back(g);
+            }
+        }
+        
+        else if (kostier < minK) {
+            minK = kostier;
+            minZoSuborov.clear();
+            for (const std::string& g : hrany) {
+                minZoSuborov.push_back(g);
+            }
+        }
+
+        std::pair<long, const std::vector<std::string>> vyslMax = nacitanieVyslPreTyp(subor);
+        kostier = vyslMax.first;
+        const std::vector<std::string>& hrany2 = vyslMax.second;
+        if (kostier == maxK) {
+            for (const std::string & g : hrany2) {
+                maxZoSuborov.push_back(g);
+            }
+        }
+        else if (kostier > maxK) {
+            maxK = kostier;
+            maxZoSuborov.clear();
+            for (const std::string & g : hrany2) {
+                maxZoSuborov.push_back(g);
+            }
+        }
+        subor.close();
+
+        
+    }
+    std::stringstream kamUkladat;
+    kamUkladat << "maxMinReg" << reg << "-" << n << ".txt";
+    std::ofstream subor2;
+    subor2.open (kamUkladat.str());
+    grafyDoSuboru("min", minK, minZoSuborov, subor2);
+    grafyDoSuboru("min", maxK, maxZoSuborov, subor2);
+    subor2.close();
 }
 
 std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
