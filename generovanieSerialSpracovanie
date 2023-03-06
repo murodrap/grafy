@@ -1,0 +1,15 @@
+#!/bin/bash
+SECONDS=0
+
+n=$1;
+k=$2;
+
+GenReg $n $k -e -a stdout | regSerial $n $k;
+
+subor=${n}_${k}_3.erg;
+cat $subor >> maxMinReg${k}-${n}.txt;
+rm $subor;
+
+echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}.txt
+echo "trvanie celeho spracovania je $SECONDS sekund";
+exit 0;
