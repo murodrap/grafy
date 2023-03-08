@@ -31,25 +31,25 @@ class SpracujCele {
     using SkupinaGrafov = std::vector<Riadky>;
     std::vector<Hrany> maxG;
     std::vector<Hrany> minG;
-    long maxK = 1;
-    long minK = LONG_MAX;
-    void kontrolaHodnot(long pocet, const Hrany& hrany);
+    unsigned long long maxK = 1;
+    unsigned long long minK = ULLONG_MAX;
+    void kontrolaHodnot(unsigned long long pocet, const Hrany& hrany);
     std::string suborZ;
     
     
     Hrany* spracujGraf(const Riadky& riadky);
     //std::pair<std::pair<long, Hrany*>, std::pair<long, Hrany*>> skupinaGrafov(std::vector<Riadky* riadky>* grafy);
-    std::pair<long, Hrany*> jedenGraf(const Riadky& graf);
+    std::pair<unsigned long long, Hrany*> jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
-    void grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
-    void grafyDoSuboru(std::string typ, long pocet, const std::vector<std::string>& grafy, std::ofstream& subor);
+    void grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
+    void grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<std::string>& grafy, std::ofstream& subor);
     void zapisDoSUboru();
 
     std::pair<SkupinaGrafov*, int> citanie(oneapi::tbb::flow_control& fc);
-    std::vector<std::pair<long, Hrany*>>* spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet);
-    void vyhodnocovanie(std::vector<std::pair<long, Hrany*>>* poctyGrafy);
-    std::pair<long, const std::vector<std::string>> nacitanieVyslPreTyp(std::ifstream& subor);
+    std::vector<std::pair<unsigned long long, Hrany*>>* spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet);
+    void vyhodnocovanie(std::vector<std::pair<unsigned long long, Hrany*>>* poctyGrafy);
+    std::pair<unsigned long long, const std::vector<std::string>> nacitanieVyslPreTyp(std::ifstream& subor);
     
 
 

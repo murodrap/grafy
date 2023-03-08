@@ -16,9 +16,9 @@
 using Riadky = std::vector<std::string>;
 using SkupinaGrafov = std::vector<Riadky>;
 using Hrany = std::vector<std::vector<int>>;
-using ParPocetAHrany = std::pair<long, std::vector<Hrany>*>;
+using ParPocetAHrany = std::pair<unsigned long long, std::vector<Hrany>*>;
 
-void SpracujCele::kontrolaHodnot(long pocet, const Hrany& hrany) {
+void SpracujCele::kontrolaHodnot(unsigned long long pocet, const Hrany& hrany) {
     //std::cout << "kostier " << pocet << "\n"; 
 
     if (pocet == maxK) {
@@ -93,7 +93,7 @@ Hrany* SpracujCele::spracujGraf(const Riadky& riadky) {
     return hrany;
 }
 
-void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor) {
+void SpracujCele::grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor) {
     subor << typ << " " << grafy.size() << " " << pocet << "\n";
         
     for (const Hrany& graf : grafy) {
@@ -114,7 +114,7 @@ void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<H
 
 }
 
-void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<std::string>& grafy, std::ofstream& subor) {
+void SpracujCele::grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<std::string>& grafy, std::ofstream& subor) {
     subor << typ << " " << grafy.size() << " " << pocet << "\n";
         
     for (const std::string& graf: grafy) {
@@ -139,13 +139,13 @@ void SpracujCele::zapisDoSUboru() {
     }
 }
 
-std::pair<long, const std::vector<std::string>> SpracujCele::nacitanieVyslPreTyp(std::ifstream& subor) {
+std::pair<unsigned long long, const std::vector<std::string>> SpracujCele::nacitanieVyslPreTyp(std::ifstream& subor) {
     std::string riadok;
     std::getline(subor, riadok);
     std::istringstream iss(riadok);
     std::string typ;
     int pocetG;
-    long kostier;
+    unsigned long long kostier;
     iss >> typ;
     iss >> pocetG;
     iss >> kostier;
@@ -171,8 +171,8 @@ void SpracujCele::vyhodnotenieVysledkovSubory() {
             return;
         }
 
-        std::pair<long, const std::vector<std::string>> vyslMin = nacitanieVyslPreTyp(subor);
-        long kostier = vyslMin.first;
+        std::pair<unsigned long long, const std::vector<std::string>> vyslMin = nacitanieVyslPreTyp(subor);
+        unsigned long long kostier = vyslMin.first;
         const std::vector<std::string>& hrany = vyslMin.second;
         
         if (kostier == minK) {
@@ -189,7 +189,7 @@ void SpracujCele::vyhodnotenieVysledkovSubory() {
             }
         }
 
-        std::pair<long, const std::vector<std::string>> vyslMax = nacitanieVyslPreTyp(subor);
+        std::pair<unsigned long long, const std::vector<std::string>> vyslMax = nacitanieVyslPreTyp(subor);
         kostier = vyslMax.first;
         const std::vector<std::string>& hrany2 = vyslMax.second;
         if (kostier == maxK) {
@@ -217,9 +217,9 @@ void SpracujCele::vyhodnotenieVysledkovSubory() {
     subor2.close();
 }
 
-std::pair<long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
+std::pair<unsigned long long, Hrany*> SpracujCele::jedenGraf(const Riadky& graf) {
     Hrany* hrany = spracujGraf(graf);
-    long kostrier = VypocetKostier::celkovyVypocet(*hrany, reg, n);
+    unsigned long long kostrier = VypocetKostier::celkovyVypocet(*hrany, reg, n);
     
     return std::make_pair(kostrier, hrany);
 }
@@ -271,9 +271,9 @@ std::pair<SkupinaGrafov*, int> SpracujCele::citanie(oneapi::tbb::flow_control& f
     return std::make_pair(grafy, nacitanychGrafov);
 }
 
-std::vector<std::pair<long, Hrany*>>* SpracujCele::spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet) {
+std::vector<std::pair<unsigned long long, Hrany*>>* SpracujCele::spracovanieSkupiny(std::pair<SkupinaGrafov*, int> grafyPocet) {
     auto grafy = grafyPocet.first;
-    std::vector<std::pair<long, Hrany*>>* spracovaneGrafy = new std::vector<std::pair<long, Hrany*>>();
+    std::vector<std::pair<unsigned long long, Hrany*>>* spracovaneGrafy = new std::vector<std::pair<unsigned long long, Hrany*>>();
     spracovaneGrafy->reserve(grafyPocet.second);
 
     for (int i  = 0; i < grafyPocet.second; i++) {
@@ -284,7 +284,7 @@ std::vector<std::pair<long, Hrany*>>* SpracujCele::spracovanieSkupiny(std::pair<
     delete grafy;
     return spracovaneGrafy;
 }
-void SpracujCele::vyhodnocovanie(std::vector<std::pair<long, Hrany*>>* poctyGrafy) {
+void SpracujCele::vyhodnocovanie(std::vector<std::pair<unsigned long long, Hrany*>>* poctyGrafy) {
     for (int i  = 0; i < poctyGrafy->size(); i++) {
         kontrolaHodnot(poctyGrafy->at(i).first, *poctyGrafy->at(i).second);
         delete poctyGrafy->at(i).second;
@@ -314,15 +314,15 @@ void SpracujCele::celySubor() {
                 return citanie(fc);
             }
         ) &
-        oneapi::tbb::make_filter<std::pair<SkupinaGrafov*, int>,std::vector<std::pair<long, Hrany*>>*>(
+        oneapi::tbb::make_filter<std::pair<SkupinaGrafov*, int>,std::vector<std::pair<unsigned long long, Hrany*>>*>(
             oneapi::tbb::filter_mode::parallel,
             [this](std::pair<SkupinaGrafov*, int> grafyPocet){
                 return spracovanieSkupiny(grafyPocet);
             }    
         ) &
-        oneapi::tbb::make_filter<std::vector<std::pair<long, Hrany*>>*,void>(
+        oneapi::tbb::make_filter<std::vector<std::pair<unsigned long long, Hrany*>>*,void>(
             oneapi::tbb::filter_mode::serial_out_of_order,
-            [this](std::vector<std::pair<long, Hrany*>>* poctyGrafy) {
+            [this](std::vector<std::pair<unsigned long long, Hrany*>>* poctyGrafy) {
                 vyhodnocovanie(poctyGrafy);
             }
         )
