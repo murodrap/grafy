@@ -8,36 +8,16 @@
 int main(int argc, char *argv[])
 {
     
-    if (argc != 4 && argc != 5) {
+    if (argc != 4) {
         std::cout << "zly pocet argumentov\n";
         return 1;
     }
 
-    SpracujCele* spr;
     std::string subor(argv[1]);
-
-    if (argc == 5) {
-        spr = new SpracujCele(subor, std::atoi(argv[3]), std::atoi(argv[2]), std::atoi(argv[4]));
-       
-        spr->vyhodnotenieVysledkovSubory();
-        return 0;
-    }
-
-
-    
-    //std::cout << "ciatme zo suboru " << subor << std::endl;
-
-    try {
-
-        spr = new SpracujCele(subor, std::atoi(argv[3]), std::atoi(argv[2]));
-    }
-    catch (...) {
-        std::cout << "zle typy argumentov\n";
-        return 1;
-    }
+    SpracujCele spr(subor, std::atoi(argv[3]), std::atoi(argv[2]));
 
     auto zaciatok = std::chrono::high_resolution_clock::now();
-    spr->celySubor();
+    spr.celySubor();
     auto koniec = std::chrono::high_resolution_clock::now();
     auto dlzka = std::chrono::duration_cast<std::chrono::seconds>(koniec - zaciatok).count();
 

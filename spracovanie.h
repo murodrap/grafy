@@ -3,13 +3,15 @@
 #include <vector>
 #include <climits>
 #include <string>
+#include <fstream>
 
 
 class SpracujCele {
     int reg;
     int n;
 
-    std::string suborZ;
+    std::ifstream suborZ;
+    std::ofstream suborDo;
     int pocetSuborov;
 
     
@@ -25,32 +27,32 @@ class SpracujCele {
     void jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
-    void grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor);
-    void grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<std::string>& grafy, std::ofstream& subor);
+    void grafyDoSuboru(unsigned long long pocet, const Hrany& grafy, std::ofstream& sub);
     void zapisDoSUboru();
-    std::pair<unsigned long long, const std::vector<std::string>> nacitanieVyslPreTyp(std::ifstream& subor);
-
 
 
 public:
     SpracujCele(std::string subor, int reg2, int n2)
-    : suborZ(subor)
-    , reg(reg2)
+    : reg(reg2)
     , n(n2)
+    , suborZ(subor)
+    , suborDo("out-" + subor)
     {
-        std::cout << reg << "-regularne grafy na " << n << " vrcholoch zo suboru "<< suborZ << std::endl;
+        std::cout << reg << "-regularne grafy na " << n << " vrcholoch zo suboru "<< subor << std::endl;
+
+    if (!suborDo.is_open()) {
+        std::cout << "Nepodarilo sa vytvorit subor a zapisat donho vysledky";
+        exit(1);
+    }
+    
+    if (!suborZ.is_open()) {
+        std::cout << "nepodarilo sa otvorit a spracovat subor " << subor << std::endl;
+        exit(1);
+    }
+
     };
 
-    SpracujCele(std::string subor, int reg2, int n2, int pocet)
-    : suborZ(subor)
-    , reg(reg2)
-    , n(n2)
-    , pocetSuborov(pocet)
-    {
-        std::cout << reg << "-regularne grafy na " << n << " vrcholoch z "<< pocetSuborov << " suborov" << std::endl;
-    };
     void celySubor();
-    void vyhodnotenieVysledkovSubory();
     
     
 };

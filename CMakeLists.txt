@@ -19,5 +19,9 @@ add_executable(pocitanieKostier
     spracovanie.cpp
     VypocetKostier.cpp)
 
-install(TARGETS pocitanieKostier DESTINATION bin)
+add_executable(zber
+    mainZber.cpp
+    zbieranieVysledkov.cpp)
+
+install(TARGETS pocitanieKostier zber DESTINATION bin)
 
