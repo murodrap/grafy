@@ -32,7 +32,7 @@ double VypocetKostier::maxH(const std::vector<std::vector<double>>& hodnoty) {
 }
 
 
-long VypocetKostier::gauss(Matica& matica, int n) {
+long long VypocetKostier::gauss(Matica& matica, int n) {
     int r1 = 0;
     int s1 = 0;
     int nas = 0;
@@ -78,11 +78,11 @@ long VypocetKostier::gauss(Matica& matica, int n) {
 
 }
 
-long VypocetKostier::kofaktor(Matica& matica, int n, int r, int s) {
-    return (long) (pow(-1, r+s) * VypocetKostier::gauss(matica, n-1));
+unsigned long long VypocetKostier::kofaktor(Matica& matica, int n, int r, int s) {
+    return (unsigned long long) (pow(-1, r+s) * VypocetKostier::gauss(matica, n-1));
 }
 
-long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, int n) {
+unsigned long long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, int n) {
     std::vector<std::vector<double>> matica(n-1);
     for (int i= 0; i < n-1; i++) {
         std::vector<double> riadok(n-1);
@@ -91,6 +91,7 @@ long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, int n) {
     }
    
     //pre neregulare grafy doplnit zistovanie stupnov vrchov
+
     for (const std::vector<int>& hrana : hrany) {
         int u = hrana[0]-1;
         int v = hrana[1]-1;
@@ -98,12 +99,20 @@ long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, int n) {
             matica[u][v] = -1.;
             matica[v][u] = -1.;
         }
+        if (!reg) { 
+            if (u >= 0) matica[u][u]++;
+            if (v >= 0) matica[v][v]++;
+        }
 
     }
-    for (int r = 0; r < n-1; r++) {
-        matica[r][r] = (double)reg;
+
+    if (reg) {
+        for (int r = 0; r < n-1; r++) {
+            matica[r][r] = (double)reg;
+        }
     }
 
+    
 
     return VypocetKostier::kofaktor(matica, n, 0, 0);
 }

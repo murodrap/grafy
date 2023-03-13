@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <vector>
+#include <set>
 #include <map>
 #include <climits>
 #include <string>
@@ -16,7 +17,7 @@ using Hrany = std::vector<std::vector<int>>;
 
 // export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/terezia/oneTbbInstallation/lib
 
-void SpracujCele::kontrolaHodnot(long pocet, const Hrany& hrany) {
+void SpracujCele::kontrolaHodnot(unsigned long long pocet, const Hrany& hrany) {
     //std::cout << "kostier " << pocet << "\n"; 
 
     if (pocet == maxK) {
@@ -95,7 +96,7 @@ Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
     return hrany;
 }
 
-void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor) {
+void SpracujCele::grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor) {
     subor << typ << " " << pocet << "\n";
         
     for (const Hrany& graf : grafy) {
@@ -118,7 +119,7 @@ void SpracujCele::grafyDoSuboru(std::string typ, long pocet, const std::vector<H
 
 void SpracujCele::zapisDoSUboru() {
     std::stringstream kamUkladat;
-    kamUkladat << "maxMinReg" << reg << "-" << n << ".txt";
+    kamUkladat << "maxMinBireg" << reg << "-" << n << "-" << reg2 << ".txt";
     std::ofstream subor;
     subor.open (kamUkladat.str());
     if (subor.is_open()) {
@@ -133,14 +134,17 @@ void SpracujCele::zapisDoSUboru() {
 }
 void SpracujCele::jedenGraf(const Riadky& graf) {
     Hrany hrany = spracujGraf(graf);
-    long kostrier = VypocetKostier::celkovyVypocet(hrany, reg, n);
-    kontrolaHodnot(kostrier, hrany);
+    Hrany najdene; 
+    std::vector<int> vrchy = std::vector<int>(n);
+    std::set<std::vector<int>> pouzite;
+    for (auto hrana : hrany) {
+        pouzite.insert(hrana);
+    }
+    kombinacieHran(reg2/2, 0, hrany, najdene, vrchy, pouzite);
+    
 }
 
 void SpracujCele::celySubor() {
-    //auto start = std::chrono::high_resolution_clock::now();
-    
-
     Riadky vrcholy(n);
     long spracovanych = 0;
     int index = 0;
@@ -160,19 +164,10 @@ void SpracujCele::celySubor() {
             vrcholy.at(index) = riadok;
             index++;
             if (index == n) {
-                //spracovanie grafu
-                //auto stop = std::chrono::high_resolution_clock::now();
-                //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-                //std::cout << "generovanie: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
-                //start = std::chrono::high_resolution_clock::now();
                 jedenGraf(vrcholy);
-                //stop = std::chrono::high_resolution_clock::now();
-                //duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-                //std::cout << "spracovanie: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
                 index = 0;
                 spracovanych++;
                 zacatyGraf = false;
-                //start = std::chrono::high_resolution_clock::now();
                 if((spracovanych % 10000) == 0) {
                     std::cout << spracovanych << "\n";
                 }
@@ -182,4 +177,49 @@ void SpracujCele::celySubor() {
 
     zapisDoSUboru();
 
+}
+
+void SpracujCele::kombinacieHran(int ostavaDlzky, int odIndexu, const Hrany& hrany, Hrany& zatialVybrate, std::vector<int>& zahrnuteVrchy, std::set<std::vector<int>>& vysledneHrany) {
+    if (!ostavaDlzky) {
+        Hrany hranyGrafu = Hrany((n*reg + reg2) / 2);
+        copy(vysledneHrany.begin(), vysledneHrany.end(), hranyGrafu.begin());
+        unsigned long long kostrier = VypocetKostier::celkovyVypocet(hranyGrafu, 0, n+1);
+        kontrolaHodnot(kostrier, hranyGrafu);
+        return;
+    }
+    if (ostavaDlzky > hrany.size() - odIndexu) {
+        return;
+    }
+    for (int i = odIndexu; i <= hrany.size() - ostavaDlzky; i++) {
+        int v = hrany[i][0];
+        int u = hrany[i][1];
+       
+        if (vznikneNasHrana(u, v, zahrnuteVrchy)) {
+                continue;
+        }
+        
+        zahrnuteVrchy[u] = 1;
+        zahrnuteVrchy[v] = 1;
+        zatialVybrate.push_back(hrany[i]);
+        vysledneHrany.erase(hrany[i]);
+        std::vector<int> h1 = {u, n};
+        std::vector<int> h2 = {v, n};
+        vysledneHrany.insert(h1);
+        vysledneHrany.insert(h2);
+        kombinacieHran(ostavaDlzky - 1, i+1, hrany, zatialVybrate, zahrnuteVrchy, vysledneHrany);
+        zatialVybrate.pop_back();
+        vysledneHrany.insert(hrany[i]);
+        vysledneHrany.erase(h1);
+        vysledneHrany.erase(h2);
+        zahrnuteVrchy[u] = 0;
+        zahrnuteVrchy[v] = 0;
+    }
+    return;
+}
+
+bool SpracujCele::vznikneNasHrana(int u, int v, std::vector<int>& zahrnuteVrchy){
+    if (zahrnuteVrchy[u]) {
+            return true;
+        }
+    return zahrnuteVrchy[v];
 }
