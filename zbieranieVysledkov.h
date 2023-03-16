@@ -13,6 +13,8 @@ class SpracujVysledky {
     int pocetSuborov;
     std::mutex mtxHodnoty;
 
+    int maxDrzanych = 1000;
+
     
     using Grafy = std::vector<std::string>;
     Grafy maxG;
@@ -36,9 +38,11 @@ public:
     : suborZ(subor)
     , pocetSuborov(pocet)
     , n(n2)
-    ,reg(reg2)
+    , reg(reg2)
+    , mtxHodnoty()
     {
         std::cout << "zberanie vysledkov pre " << pocet << " suborov\n";
+
     };
     void zberVysledkov();
 
