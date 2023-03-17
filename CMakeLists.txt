@@ -23,5 +23,9 @@ add_executable(zber
     mainZber.cpp
     zbieranieVysledkov.cpp)
 
-install(TARGETS pocitanieKostier zber DESTINATION bin)
+add_executable(rozdelovac
+    mainRozdelovac.cpp
+    rozdelovanieVysledkov.cpp)
+
+install(TARGETS pocitanieKostier zber rozdelovac DESTINATION bin)
 

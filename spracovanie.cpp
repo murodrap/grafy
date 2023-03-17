@@ -129,8 +129,10 @@ void SpracujCele::celySubor() {
     int index = 0;
     std::string riadok;
     bool zacatyGraf = false;
+    //std::cout << "citat\n";
    
     while (std::getline(suborZ, riadok)) {
+        //std::cout << riadok << std::endl;
         if (riadok[0] == 'G') {
             zacatyGraf = true;
         }
