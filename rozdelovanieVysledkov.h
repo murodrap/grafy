@@ -16,6 +16,7 @@ class RozdelujVysledky {
     int velkostSkupiny;
 
     std::mutex mtxPosielanie;
+    std::vector<std::mutex> mtxSubory;
     int komuPoslat = 0;
 
     std::vector<std::ofstream> suboryVon;
@@ -40,10 +41,9 @@ public:
     , n(n2)
     , velkostSkupiny(velkostSkupiny2)
     , mtxPosielanie()
+    , mtxSubory(pocetSuborov)
     {
-        std::cout << "rozdelovanie vysledkov pre " << pocet << " suborov na " << n << " vrcholov, skupina " << velkostSkupiny << std::endl;
-    
-
+        std::cout << "rozdelovanie vysledkov pre " << pocet << " suborov na " << n << " vrcholov, skupina " << velkostSkupiny << std::endl;    
     };
     void rozdelovanieVysledkov();
 };

@@ -19,11 +19,12 @@ using Grafy = std::vector<Graf>;
 
 void RozdelujVysledky::grafyDoSuboru(const Grafy& grafy) {
     mtxPosielanie.lock();
+    int index = komuPoslat;
     std::ofstream& subor = suboryVon[komuPoslat];
     komuPoslat = (komuPoslat+1) % pocetSuborov;
+    mtxPosielanie.unlock();
 
-    
-    
+    mtxSubory[index].lock();
     for (const Graf& graf : grafy) {
         if (graf.empty()) {
             break;
@@ -34,7 +35,8 @@ void RozdelujVysledky::grafyDoSuboru(const Grafy& grafy) {
         }
         
     }
-    mtxPosielanie.unlock();
+    mtxSubory[index].unlock();
+    
 }
 
 
@@ -115,6 +117,3 @@ void RozdelujVysledky::rozdelovanieVysledkov() {
     }
 
 }
-
-
-
