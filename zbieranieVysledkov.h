@@ -9,6 +9,7 @@
 class SpracujVysledky {
     int n;
     int reg;
+    int reg2;
     std::string suborZ;
     int pocetSuborov;
     std::mutex mtxHodnoty;
@@ -34,11 +35,12 @@ class SpracujVysledky {
 public:
 
 
-    SpracujVysledky(std::string subor, int pocet, int n2, int reg2)
+    SpracujVysledky(std::string subor, int pocet, int n2, int regA, int regB)
     : suborZ(subor)
     , pocetSuborov(pocet)
     , n(n2)
-    , reg(reg2)
+    , reg(regA)
+    , reg2(regB)
     , mtxHodnoty()
     {
         std::cout << "zberanie vysledkov pre " << pocet << " suborov\n";

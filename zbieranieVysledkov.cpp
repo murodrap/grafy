@@ -62,7 +62,8 @@ void SpracujVysledky::grafyDoSuboru(std::string typ, unsigned long long pocet, c
 void SpracujVysledky::zapisDoSUboru() {
 
     std::stringstream kamUkladat;
-    kamUkladat << "maxMinReg" << reg << "-" << n << "-" << pocetSuborov << ".txt";
+    kamUkladat << "maxMinBireg" << reg << "-" << n << "-" << reg2 << "-" << pocetSuborov << ".txt";
+
     std::ofstream subor2;
     subor2.open (kamUkladat.str());
     //std::cout << kamUkladat.str() << std::endl;
@@ -90,7 +91,6 @@ std::pair<unsigned long long, const std::string> SpracujVysledky::nacitanieVyslP
     std::string graf;
     //std::cout << "pocet nacitany\n";
     std::getline(subor, riadok);
-    //std::cout << kostier << "-" << riadok << "-\n";
     graf = std::move(riadok);
     //std::cout << "graf nacitany\n";
     return std::make_pair(kostier, std::move(graf));
