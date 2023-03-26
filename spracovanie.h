@@ -35,11 +35,12 @@ class SpracujCele {
 
 
 public:
-    SpracujCele(int reg2, int n2, int h)
-    : reg(reg2)
+    SpracujCele(int reg22, int n2, int h)
+    : reg(reg22)
     , n(n2)
     , reg2(h)
     {
+        std::cout << reg << "-regularne na " << n << " vrcholoch, navyse " << reg2 << "-regularny" << std::endl;
     };
     void celySubor();
     

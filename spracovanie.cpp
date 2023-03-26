@@ -180,6 +180,7 @@ void SpracujCele::celySubor() {
 }
 
 void SpracujCele::kombinacieHran(int ostavaDlzky, int odIndexu, const Hrany& hrany, Hrany& zatialVybrate, std::vector<int>& zahrnuteVrchy, std::set<std::vector<int>>& vysledneHrany) {
+    
     if (!ostavaDlzky) {
         Hrany hranyGrafu = Hrany((n*reg + reg2) / 2);
         copy(vysledneHrany.begin(), vysledneHrany.end(), hranyGrafu.begin());
