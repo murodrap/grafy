@@ -25,7 +25,7 @@ eval rm out-graf-{1..${pocetCasti}};
 
 for i in $(eval echo {1..${pocetCasti}}); do
   subor=${n}_${k}_3#${i}.erg
-  cat $subor >> maxMinReg${k}-${n}-${pocetCasti}.txt
+  cat $subor >> maxMinBireg${k}-${n}-${k2}-${pocetCasti}.txt
   rm $subor
 done
 
