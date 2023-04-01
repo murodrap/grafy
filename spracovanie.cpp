@@ -20,7 +20,9 @@ void SpracujCele::kontrolaHodnot(unsigned long long pocet, const Hrany& hrany) {
     //std::cout << "kostier " << pocet << "\n"; 
 
     if (pocet == maxK) {
-        maxG.push_back(hrany);
+        if (maxG.size() < maxDrzanych) {
+            maxG.push_back(hrany);
+        }
     }
 
     if (pocet > maxK) {
@@ -29,7 +31,9 @@ void SpracujCele::kontrolaHodnot(unsigned long long pocet, const Hrany& hrany) {
         maxG.push_back(hrany);
     }
     if (pocet == minK) {
-        minG.push_back(hrany);
+        if (minG.size() < maxDrzanych) {
+            minG.push_back(hrany);
+        }
     }
 
     if (pocet < minK) {
@@ -95,32 +99,41 @@ Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
     return hrany;
 }
 
-void SpracujCele::grafyDoSuboru(unsigned long long pocet, const Hrany& graf, std::ofstream& sub) {
+void SpracujCele::grafyDoSuboru(unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub) {
     sub << pocet << "\n";
         
     sub << "[";
     bool prve = true;
-    for (const std::vector<int>& hrana : graf) {
-        if (prve) {
-            prve = false;
+    for (const Hrany& graf : grafy) {
+        for (const std::vector<int>& hrana : graf) {
+            if (prve) {
+                prve = false;
+            }
+            else {
+                sub << ", ";
+            }
+            sub << "(" << hrana[0] << ", " << hrana[1] << ")";
         }
-        else {
-            sub << ", ";
-        }
-        sub << "(" << hrana[0] << ", " << hrana[1] << ")";
-    }
 
-    sub << "]\n";
+        sub << "]\n";
+    }
 
 
 }
 
+void SpracujCele::zapisDoSUboru(){
+    suborDo << "min " << minG.size() << " ";
+    grafyDoSuboru(minK, minG, suborDo);
+    suborDo << "max " << maxG.size() << " ";
+    grafyDoSuboru(maxK, maxG, suborDo);
+
+}
 
 void SpracujCele::jedenGraf(const Riadky& graf) {
     Hrany hrany = spracujGraf(graf);
-    long kostier = VypocetKostier::celkovyVypocet(hrany, reg, n);
-    //kontrolaHodnot(kostrier, hrany);
-    grafyDoSuboru(kostier, hrany, suborDo);
+    long kostier = pocitadlo.celkovyVypocet(hrany);
+    kontrolaHodnot(kostier, hrany);
+    //grafyDoSuboru(kostier, hrany, suborDo);
 }
 
 void SpracujCele::celySubor() {
@@ -155,7 +168,10 @@ void SpracujCele::celySubor() {
             }
         }
     }
+    
     suborZ.close();
+    zapisDoSUboru();
     suborDo.close();
+    pocitadlo.koniec();
 
 }

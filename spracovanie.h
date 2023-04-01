@@ -4,6 +4,7 @@
 #include <climits>
 #include <string>
 #include <fstream>
+#include "VypocetKostier.h"
 
 
 class SpracujCele {
@@ -13,6 +14,8 @@ class SpracujCele {
     std::ifstream suborZ;
     std::ofstream suborDo;
     int pocetSuborov;
+    VypocetKostier pocitadlo;
+    int maxDrzanych = 1000;
 
     
     using Hrany = std::vector<std::vector<int>>;
@@ -27,7 +30,7 @@ class SpracujCele {
     void jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
-    void grafyDoSuboru(unsigned long long pocet, const Hrany& grafy, std::ofstream& sub);
+    void grafyDoSuboru(unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
     void zapisDoSUboru();
 
 
@@ -37,8 +40,10 @@ public:
     , n(n2)
     , suborZ(subor)
     , suborDo("out-" + subor)
+    , pocitadlo(VypocetKostier(n, reg))
     {
         std::cout << reg << "-regularne grafy na " << n << " vrcholoch zo suboru "<< subor << std::endl;
+        
 
     if (!suborDo.is_open()) {
         std::cout << "Nepodarilo sa vytvorit subor a zapisat donho vysledky";
