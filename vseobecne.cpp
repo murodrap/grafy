@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <regex>
 #include <bits/stdc++.h>
+#include <string.h>
 
 #include "VypocetKostier.h"
 #include "vseobecne.h"
+#include "izomorfizmus.h"
+
 
 bool VseobecneFunkcie::havelHakimi(int n1, int k1, int n2, int k2) {
     std::vector<int> stupne;
@@ -49,22 +53,68 @@ bool VseobecneFunkcie::existujeGraf(int n1, int k1, int n2, int k2){
     return true;
 }
 
-Hrany VseobecneFunkcie::stringNaHrany(const std::string& zoznamHran) {
+
+Hrany VseobecneFunkcie::stringNaHrany(std::string& zoznamHran) {
     Hrany hrany;
-    std::istringstream iss(zoznamHran);
+
     std::string znaky;
-    int vrchol1;
-    int vrchol2;
-    bool zacataHrana = false;
-    while (true) {
-        iss >> znaky;
-        if (znaky.empty()) {
-            break;
-        }
-        iss >> vrchol1;
-        iss >> znaky;
-        iss >> vrchol1;
-        hrany.push_back({vrchol1, vrchol2});
+
+    std::regex hranaRegex("[0-9]+, [0-9]+");
+    std::regex vrcholyRegex("([0-9]+), ([0-9]+)");
+    std::smatch hranyNajdene;
+    std::smatch vrcholyNajdene;
+
+    while (std::regex_search(zoznamHran, hranyNajdene, hranaRegex)) {
+   
+        std::string vr = hranyNajdene[0];
+        std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
+        std::string v = vrcholyNajdene[1];
+        std::string u = vrcholyNajdene[2];
+        hrany.push_back({std::stoi(v), std::stoi(u)});
+        zoznamHran = hranyNajdene.suffix();
     }
+
     return hrany;
+}
+
+AdjList VseobecneFunkcie::stringNaAdjList(std::string& zoznamHran, int n) {
+    AdjList adjList;
+    for (int v = 0; v < n; v++) {
+        adjList[v] = std::vector<int>();
+    }
+
+    std::string znaky;
+
+    std::regex hranaRegex("[0-9]+, [0-9]+");
+    std::regex vrcholyRegex("([0-9]+), ([0-9]+)");
+    std::smatch hranyNajdene;
+    std::smatch vrcholyNajdene;
+
+    while (std::regex_search(zoznamHran, hranyNajdene, hranaRegex)) {
+        std::string vr = hranyNajdene[0];
+        std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
+        int v = std::stoi(vrcholyNajdene[1]);
+        int u = std::stoi(vrcholyNajdene[2]);
+        adjList[v].push_back(u);
+        adjList[u].push_back(v);
+        zoznamHran = hranyNajdene.suffix();
+    }
+
+    return adjList;
+
+}
+
+bool VseobecneFunkcie::izomorfneGrafy(std::string& g1, int n1, std::string& g2, int n2) {
+    const AdjList adj1 = stringNaAdjList(g1, n1);
+    const AdjList adj2 = stringNaAdjList(g2, n2);
+    return izomorfneGrafy(adj1, n1, adj2, n2);
+}
+
+bool VseobecneFunkcie::izomorfneGrafy(const AdjList& g1, int n1, const AdjList& g2, int n2) {
+    Strom* graf1 = new Strom(g1, n1);
+    Strom* graf2 = new Strom(g2, n2);
+    bool vysl = graf1->suIzomorfne(graf2);
+    delete graf1;
+    delete graf2;
+    return vysl;
 }

@@ -5,18 +5,19 @@
 #include <cmath>
 #include <iostream>
 #include <iomanip>
+#include <string.h>
 #include "VypocetKostier.h"
 
 using Matica = std::vector<std::vector<double>>;
 using Hrany = std::vector<std::vector<int>>;
 
-double VypocetKostier::maxH(const std::vector<std::vector<double>>& hodnoty) {
+double VypocetKostier::maxH(int pocet) {
 
     double najdene[2] {0., 0.};
-    for (const std::vector<double>& h : hodnoty) {
+    for (int i = 0; i < pocet; i++) {
         
-        double p = h[0];
-        double d = h[1];
+        double p = dvojiceHodnot[i][0];
+        double d = dvojiceHodnot[i][1];
         
         if (p > najdene[0]) {
             najdene[0] = p;
@@ -32,7 +33,7 @@ double VypocetKostier::maxH(const std::vector<std::vector<double>>& hodnoty) {
 }
 
 
-long long VypocetKostier::gauss(Matica& matica, int n) {
+long long VypocetKostier::gauss(int n) {
     int r1 = 0;
     int s1 = 0;
     int nas = 0;
@@ -40,19 +41,22 @@ long long VypocetKostier::gauss(Matica& matica, int n) {
 
     while (r1 < n && s1 < n) {
             double iMax;
+
             std::vector<std::vector<double>> hodnoty(n-r1);
 
             for (int i = r1; i < n; i++) {
-                hodnoty[i-r1] = {(double)std::abs(matica[i][s1]), (double)i};
+                //hodnoty[i-r1] = {(double)std::abs(matica[i][s1]), (double)i};
+                dvojiceHodnot[i-r1][0] = (double)std::abs(matica[i][s1]);
+                dvojiceHodnot[i-r1][1] = (double)i;
             }
-            iMax = maxH(hodnoty);
+            iMax = maxH(n - r1);
             
-            if (matica[iMax][s1] == 0) {
+            if (matica[(int)iMax][s1] == 0) {
                 s1++;
             }
 
             else {
-                std::swap(matica[r1], matica[iMax]);
+                std::swap(matica[r1], matica[(int)iMax]);
                 nas *= -1;
 
                 for (int i = r1+1; i < n; i++) {
@@ -73,25 +77,20 @@ long long VypocetKostier::gauss(Matica& matica, int n) {
             vysl *= matica[i][i];
         }
 
-    return abs(round(vysl));
+    return llabs(llround(vysl));
 
 
 }
 
-unsigned long long VypocetKostier::kofaktor(Matica& matica, int n, int r, int s) {
-    return (unsigned long long) (pow(-1, r+s) * VypocetKostier::gauss(matica, n-1));
+unsigned long long VypocetKostier::kofaktor(int n, int r, int s) {
+    return (unsigned long long) (pow(-1, r+s) * VypocetKostier::gauss(n-1));
 }
 
-unsigned long long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, int n) {
-   std::vector<std::vector<double>> matica(n-1);
+unsigned long long VypocetKostier::celkovyVypocet(const Hrany& hrany) {
     for (int i= 0; i < n-1; i++) {
-        std::vector<double> riadok(n-1);
-        matica[i] = riadok;
-
+        memset(matica[i], 0, (n - 1)*sizeof(*matica[i]));
     }
    
-    //pre neregulare grafy doplnit zistovanie stupnov vrchov
-
     for (const std::vector<int>& hrana : hrany) {
         int u = hrana[0]-1;
         int v = hrana[1]-1;
@@ -105,7 +104,6 @@ unsigned long long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, i
         }
 
     }
-
     if (reg) {
         for (int r = 0; r < n-1; r++) {
             matica[r][r] = (double)reg;
@@ -113,5 +111,5 @@ unsigned long long VypocetKostier::celkovyVypocet(const Hrany& hrany, int reg, i
     }
 
 
-    return VypocetKostier::kofaktor(matica, n, 0, 0);
+    return VypocetKostier::kofaktor(n, 0, 0);
 }
