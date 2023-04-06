@@ -89,7 +89,6 @@ std::pair<unsigned long long, const std::string> SpracujVysledky::nacitanieVyslP
         return std::make_pair(0, "");
     }
     std::string graf;
-    //std::cout << "pocet nacitany\n";
     std::getline(subor, riadok);
     graf = std::move(riadok);
     //std::cout << "graf nacitany\n";

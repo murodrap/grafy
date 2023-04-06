@@ -144,6 +144,7 @@ void SpracujCele::celySubor() {
         }
         
         else if (zacatyGraf){
+            //std::cout << riadok;
             vrcholy.at(index) = riadok;
             index++;
             
@@ -162,6 +163,7 @@ void SpracujCele::celySubor() {
     }
     suborZ.close();
     suborDo.close();
+    pocitadlo.koniec();
 
 }
 
@@ -170,7 +172,7 @@ void SpracujCele::kombinacieHran(int ostavaDlzky, int odIndexu, const Hrany& hra
     if (!ostavaDlzky) {
         Hrany hranyGrafu = Hrany((n*reg + reg2) / 2);
         copy(vysledneHrany.begin(), vysledneHrany.end(), hranyGrafu.begin());
-        unsigned long long kostrier = VypocetKostier::celkovyVypocet(hranyGrafu, 0, n+1);
+        unsigned long long kostrier = pocitadlo.celkovyVypocet(hranyGrafu);
         //kontrolaHodnot(kostrier, hranyGrafu);
         grafyDoSuboru(kostrier, hranyGrafu, suborDo);
         return;

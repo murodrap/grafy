@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include "VypocetKostier.h"
 
 
 class SpracujCele {
@@ -15,6 +16,7 @@ class SpracujCele {
     std::ifstream suborZ;
     std::ofstream suborDo;
     int pocetSuborov;
+    VypocetKostier pocitadlo;
 
     
     using Hrany = std::vector<std::vector<int>>;
@@ -43,6 +45,7 @@ public:
     , reg2(regB)
     , suborZ(subor)
     , suborDo("out-" + subor)
+    , pocitadlo(VypocetKostier(n + 1, 0))
     {
         std::cout << reg << "-regularne grafy na " << n << " vrcholoch, navyse " << reg2 << ", zo suboru "<< subor << std::endl;
 
