@@ -109,6 +109,23 @@ void Generator::vsetkyGrafy(std::vector<int>& ostavajuceStupne, Hrany& vybrateHr
         }
 
     }
+    
+}
+
+void Generator::generovanie() {
+    std::vector<int> stupne;
+    
+    stupne.reserve(n1 + n2);
+    for (int i = 0; i < n1; i++) {
+        stupne[i] = reg1;
+
+    }
+    for (int i = 0; i < n2; i++) {
+        stupne[n1 + i] = reg2;
+    }
+    std::vector<int> spojenia(n1 + n2);
+    Hrany h;
+    vsetkyGrafy(stupne, h, spojenia);
     zapisDoSUboru();
     pocitadlo.koniec();
 }

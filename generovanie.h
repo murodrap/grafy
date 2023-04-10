@@ -32,7 +32,7 @@ class Generator {
     void grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
     void zapisDoSUboru();
 
-    void Generator::vsetkyGrafy(std::vector<int>& ostavajuceStupne, Hrany& vybrateHrany, std::vector<int>& spojeniaDo);
+    void vsetkyGrafy(std::vector<int>& ostavajuceStupne, Hrany& vybrateHrany, std::vector<int>& spojeniaDo);
 
 
 public:

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 SET(CMAKE_INSTALL_PREFIX .)
 
-project(vseobecneMetody
+project(generovanie
     DESCRIPTION "bla"
     LANGUAGES CXX)
 
@@ -15,10 +15,11 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 
-add_executable(grafyFunkcie
-    mainVseobecne.cpp
+add_executable(generivaniePolky
+    mainGenerovanie.cpp
     vseobecne.cpp
     VypocetKostier.cpp
+    generovanie.cpp
     izomorfizmus.cpp)
 
-install(TARGETS grafyFunkcie DESTINATION bin)
+install(TARGETS generivaniePolky DESTINATION bin)
