@@ -42,4 +42,11 @@ add_executable(grafyFunkcie
     vypocetKostier.cpp
     izomorfizmus.cpp)
 
-install(TARGETS kostryRegularne zberRegularne kostryBiregularne zberBiregularne grafyFunkcie DESTINATION bin)
+add_executable(generovanie
+    mainGenerovanie.cpp
+    vseobecne.cpp
+    vypocetKostier.cpp
+    generovanie.cpp
+    izomorfizmus.cpp)
+
+install(TARGETS kostryRegularne zberRegularne kostryBiregularne zberBiregularne generovanie grafyFunkcie DESTINATION bin)
