@@ -23,4 +23,10 @@ add_executable(zberRegularne
     mainZberRegularne.cpp
     zberRegularne.cpp)
 
-install(TARGETS kostryRegularne zberRegularne DESTINATION bin)
+add_executable(grafyFunkcie
+    mainVseobecne.cpp
+    vseobecne.cpp
+    vypocetKostier.cpp
+    izomorfizmus.cpp)
+
+install(TARGETS kostryRegularne zberRegularne grafyFunkcie DESTINATION bin)
