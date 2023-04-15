@@ -143,7 +143,7 @@ void SpracujCele::celySubor() {
     std::string riadok;
     bool zacatyGraf = false;
    
-    while (std::getline(suborZ, riadok)) {
+    while (std::getline(std::cin, riadok)) {
         if (riadok[0] == 'G') {
             zacatyGraf = true;
         }
@@ -169,7 +169,7 @@ void SpracujCele::celySubor() {
         }
     }
     
-    suborZ.close();
+    //suborZ.close();
     zapisDoSUboru();
     suborDo.close();
     pocitadlo.koniec();

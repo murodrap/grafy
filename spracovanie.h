@@ -38,8 +38,8 @@ public:
     SpracujCele(std::string subor, int reg2, int n2)
     : reg(reg2)
     , n(n2)
-    , suborZ(subor)
-    , suborDo("out-" + subor)
+    //, suborZ(subor)
+    , suborDo(subor)
     , pocitadlo(VypocetKostier(n, reg))
     {
         std::cout << reg << "-regularne grafy na " << n << " vrcholoch zo suboru "<< subor << std::endl;
@@ -50,10 +50,10 @@ public:
         exit(1);
     }
     
-    if (!suborZ.is_open()) {
-        std::cout << "nepodarilo sa otvorit a spracovat subor " << subor << std::endl;
-        exit(1);
-    }
+    //if (!suborZ.is_open()) {
+    //    std::cout << "nepodarilo sa otvorit a spracovat subor " << subor << std::endl;
+    //    exit(1);
+    //}
 
     };
 
