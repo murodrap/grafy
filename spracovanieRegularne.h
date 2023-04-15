@@ -9,12 +9,10 @@
 
 
 class SpracujCele {
-    int reg;
-    int n;
+    
 
-    std::ofstream suborDo;
-    int pocetSuborov;
-    VypocetKostier pocitadlo;
+    
+    
     int maxDrzanych = 1000;
 
     
@@ -23,15 +21,23 @@ class SpracujCele {
     std::vector<Hrany> minG;
     unsigned long long maxK = 1;
     unsigned long long minK = ULLONG_MAX;
-    void kontrolaHodnot(unsigned long long pocet, const Hrany& hrany);
+    
     
     using Riadky = std::vector<std::string>;
-    Hrany spracujGraf(const Riadky& riadky);
-    void jedenGraf(const Riadky& graf);
+    
+    virtual void jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
     void grafyDoSuboru(unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
     void zapisDoSUboru();
+
+protected:
+    int reg;
+    int n;
+    std::ofstream suborDo;
+    VypocetKostier pocitadlo;
+    void kontrolaHodnot(unsigned long long pocet, const Hrany& hrany);
+    Hrany spracujGraf(const Riadky& riadky);
 
 
 public:
