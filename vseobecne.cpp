@@ -182,12 +182,19 @@ void VseobecneFunkcie::porovnamieKostier(std::string& g1, int n1, std::string& g
     unsigned long long spolocne = 0;
     for (auto it1 = triedyKostier1.begin(); it1 != triedyKostier1.end(); it1++) {
         for (auto it2 = triedyKostier2.begin(); it2 != triedyKostier2.end(); it2++) {
-        if (it1->first->suIzomorfne(it2->first)) {
-            //std::cout << "izom\n";
-            spolocne++;
-            VseobecneFunkcie::vypisGraf(it1->first->hranyStromu());
+            if (it1->first->suIzomorfne(it2->first)) {
+                //std::cout << "izom\n";
+                spolocne++;
+                VseobecneFunkcie::vypisGraf(it1->first->hranyStromu());
+            }
         }
     }
+
+    for (auto it = triedyKostier1.begin(); it != triedyKostier1.end(); it++) {
+        delete it->first;
+    }
+    for (auto it = triedyKostier2.begin(); it != triedyKostier2.end(); it++) {
+        delete it->first;
     }
     std::cout << std::endl << spolocne << " spolocnych kostier" << std::endl;
 }

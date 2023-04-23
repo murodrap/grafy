@@ -50,7 +50,10 @@ void generovanieKostier() {
   std::string subor;
   std::cout << "zadajte nazov vystupneho suboru: ";
   std::getline(std::cin, subor);
-  VseobecneFunkcie::generovanieKostier(graf, n, subor);
+  const std::map<Strom*, int> triedy = VseobecneFunkcie::generovanieKostier(graf, n, subor);
+  for (auto it = triedy.begin(); it != triedy.end(); it++) {
+    delete it->first;
+  }
 }
 
 void porovnanieKostier() {

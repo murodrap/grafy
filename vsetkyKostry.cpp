@@ -79,10 +79,7 @@ void Onete::vynulujDatStruktury() {
         std::fill(u[r].begin(), u[r].end(), 0);
     }
     pocetKostrier = 0;
-    triedyIzomorfizmuPocty.clear();
-    for (auto it = triedyIzomorfizmuPocty.begin(); it != triedyIzomorfizmuPocty.end(); it++) {
-        delete it->first;
-    }
+    vymazanieStromov();
     triedyIzomorfizmuPocty.clear();
     
 }

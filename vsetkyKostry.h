@@ -53,5 +53,10 @@ class Onete {
 
         const std::map<Strom*, int> generovanieKostier(const Hrany& hrany2);
         void zapisDoSuboru(std::string nazpov);
+        void vymazanieStromov() {
+            for (auto it = triedyIzomorfizmuPocty.begin(); it != triedyIzomorfizmuPocty.end(); it++) {
+                delete it->first;
+            }
+        }
         
 };
