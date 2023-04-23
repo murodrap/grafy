@@ -28,6 +28,14 @@ add_executable(kostryBiregularne
     vsetkyKostry.cpp
     spracovanieRegularne.cpp)
 
+add_executable(kostryTriedy
+    mainTriedy.cpp
+    spracovanieTriedy.cpp
+    vsetkyKostry.cpp
+    izomorfizmus.cpp
+    spracovanieRegularne.cpp
+    vypocetKostier)
+
 add_executable(zberRegularne
     mainZberRegularne.cpp
     zberRegularne.cpp)
@@ -52,4 +60,4 @@ add_executable(generovanie
     izomorfizmus.cpp
     vsetkyKostry.cpp)
 
-install(TARGETS kostryRegularne zberRegularne kostryBiregularne zberBiregularne generovanie grafyFunkcie DESTINATION bin)
+install(TARGETS kostryRegularne zberRegularne kostryBiregularne kostryTriedy zberBiregularne generovanie grafyFunkcie DESTINATION bin)

@@ -58,5 +58,8 @@ class Onete {
                 delete it->first;
             }
         }
+        unsigned long long kostry() {
+            return pocetKostrier;
+        }
         
 };

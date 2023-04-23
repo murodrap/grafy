@@ -29,7 +29,7 @@ class SpracujCele {
     long podlaVzorca();
 
     void grafyDoSuboru(unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
-    void zapisDoSUboru();
+    virtual void zapisDoSUboru();
 
 protected:
     int reg;
