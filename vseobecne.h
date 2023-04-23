@@ -5,6 +5,8 @@
 #include <map>
 
 #include "vypocetKostier.h"
+#include "vsetkyKostry.h"
+#include "izomorfizmus.h"
 
 using Hrany = std::vector<std::vector<int>>;
 using AdjList = std::map<int, std::vector<int>>;
@@ -15,6 +17,7 @@ class VseobecneFunkcie
     static Hrany stringNaHrany(std::string& zoznamHran);
     static AdjList stringNaAdjList(std::string& zoznamHran, int n);
     static bool izomorfneGrafy(const AdjList& g1, int n1, const AdjList& g2, int n2);
+    static void vypisGraf(const Hrany& graf);
     
     public:
         
@@ -30,6 +33,23 @@ class VseobecneFunkcie
             return pocetKostier(stringNaHrany(hrany), reg, n);
         }
         static bool izomorfneGrafy(std::string& g1, int n1, std::string& g2, int n2);
-        static unsigned long generovanieKostier(const Hrany& hrany, int n, const std::string& suborDo); 
-        static unsigned long generovanieKostier(const std::string& hrany, int n, const std::string& suborDo); 
+
+        static Hrany kostraBFS(std::string& hrany, int n) {
+            return kostraBFS(stringNaAdjList(hrany, n), n);
+        }
+        static Hrany kostraBFS(const AdjList& graf, int n);
+
+        static const std::map<Strom*, int> generovanieKostier(const Hrany& hrany, int n, const std::string& suborDo) {
+            Onete o = Onete(n, hrany.size());
+
+            const std::map<Strom*, int> triedy = o.generovanieKostier(hrany);
+            o.zapisDoSuboru(suborDo);
+            return triedy;
+        }
+        static const std::map<Strom*, int> generovanieKostier(std::string& hrany, int n, const std::string& suborDo) {
+            return generovanieKostier(stringNaHrany(hrany), n, suborDo);
+        }
+        static void porovnamieKostier(std::string& g1, int n1, std::string& g2, int n2);
+
+        
 };

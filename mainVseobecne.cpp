@@ -31,7 +31,7 @@ void izomorfizmus() {
   std::getline(std::cin, graf2);
   int n2 = std::stoi(graf2);
   std::cout << "zadajte edge list druheho grafu: ";
-  std::getline(std::cin, graf1);
+  std::getline(std::cin, graf2);
   if (VseobecneFunkcie::izomorfneGrafy(graf1, n1, graf2, n2)) {
     std::cout << "grafy su izomorfne" << std::endl;
   }
@@ -40,11 +40,47 @@ void izomorfizmus() {
   }
 }
 
+void generovanieKostier() {
+  std::string graf;
+  std::cout << "zadajte pocet vrcholov grafu: ";
+  std::getline(std::cin, graf);
+  int n = std::stoi(graf);
+  std::cout << "zadajte edge list grafu: ";
+  std::getline(std::cin, graf);
+  std::string subor;
+  std::cout << "zadajte nazov vystupneho suboru: ";
+  std::getline(std::cin, subor);
+  const std::map<Strom*, int> triedy = VseobecneFunkcie::generovanieKostier(graf, n, subor);
+  for (auto it = triedy.begin(); it != triedy.end(); it++) {
+    delete it->first;
+  }
+}
+
+void porovnanieKostier() {
+  std::string graf1;
+  std::string graf2;
+  std::cout << "zadajte pocet vrcholov prveho grafu: "; 
+  std::getline(std::cin, graf1);
+  int n1 = std::stoi(graf1);
+  std::cout << "zadajte edge list prveho grafu: ";
+  std::getline(std::cin, graf1);
+
+  std::cout << "zadajte pocet vrcholov druheho grafu: "; 
+  std::getline(std::cin, graf2);
+  int n2 = std::stoi(graf2);
+  std::cout << "zadajte edge list druheho grafu: ";
+  std::getline(std::cin, graf2);
+
+  VseobecneFunkcie::porovnamieKostier(graf1, n1, graf2, n2);
+}
+
 void ponuka() {
   std::cout << "**********************" << std::endl;
   std::cout << "pocet kostier grafu: 1" << std::endl;
   std::cout << "izomorfizmus grafov: 2" << std::endl;
-  std::cout << "koniec: 3" << std::endl;
+  std::cout << "vsetky kostry grafu: 3" << std::endl;
+  std::cout << "porovnanie kostier grafov: 4" << std::endl;
+  std::cout << "koniec: 5" << std::endl;
   std::cout << "**********************" << std::endl;
   
   std::string vyber;
@@ -57,6 +93,12 @@ void ponuka() {
     izomorfizmus();
   }
   else if (vyber == "3") {
+    generovanieKostier();
+  }
+  else if (vyber == "4") {
+    porovnanieKostier();
+  }
+  else if (vyber == "5") {
     exit(0);
   }
   else {

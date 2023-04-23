@@ -30,11 +30,13 @@ std::pair<int, std::vector<int>> Strom::najvzdialenejsi(int v) {
     while (!naPrejdenie.empty()) {
         std::vector<std::pair<int, std::vector<int>>> nove;
         for (auto vrchCesta : naPrejdenie) {
+            
             int u = vrchCesta.first;
+
             std::vector<int>& cesta = vrchCesta.second;
             
             for (int potomok : graf.find(u)->second) {
-                if (prejdeneVrcholy.find(potomok) != prejdeneVrcholy.end()) {
+                if (prejdeneVrcholy.find(potomok) == prejdeneVrcholy.end()) {
                     prejdeneVrcholy.insert(potomok);
 
                     std::vector<int> cestaRozsirena = cesta;
@@ -43,13 +45,14 @@ std::pair<int, std::vector<int>> Strom::najvzdialenejsi(int v) {
                 }
             }
         }
+        
         predchadzajuce = std::move(naPrejdenie);
         naPrejdenie = std::move(nove);
     }
     return predchadzajuce[0];
 }
 
-std::vector<int> Strom::korene() {
+std::vector<int> Strom::koreneVypocet() {
 
     int x = 0;
     std::pair<int, std::vector<int>> v1Cesta1 = najvzdialenejsi(x);
@@ -68,7 +71,7 @@ std::string Strom::kodVrcholAHU(int vrch) {
 
     std::vector<std::string> stredKodu;
     for (int potomok : graf.find(vrch)->second) {
-        if (prejdeneVrcholy.find(potomok) != prejdeneVrcholy.end()) {
+        if (prejdeneVrcholy.find(potomok) == prejdeneVrcholy.end()) {
             prejdeneVrcholy.insert(potomok);
             stredKodu.emplace_back(kodVrcholAHU(potomok));
         }
@@ -91,14 +94,13 @@ bool Strom::suIzomorfne(Strom* strom2) {
     if (strom2->pocetVrcholov() != pocetVrcholov()) {
         return false;
     }
-    std::vector<int> kor1 = korene();
-    std::vector<int> kor2 = strom2->korene();
-    if (kor1.size() != kor2.size()) {
+
+    if (korene().size() != strom2->korene().size()) {
         return false;
     }
-    for (int k1 : kor1) {
-        for (int k2 : kor2) {
-            if (kodStromAHU(k1) == strom2->kodStromAHU(k2)) {
+    for (auto kod1 : kodyAHU()) {
+        for (auto kod2 : strom2->kodyAHU()) {
+            if (kod1 == kod2) {
                 return true;
             }
         }

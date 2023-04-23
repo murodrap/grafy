@@ -70,7 +70,14 @@ Hrany VseobecneFunkcie::stringNaHrany(std::string& zoznamHran) {
         std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
         std::string v = vrcholyNajdene[1];
         std::string u = vrcholyNajdene[2];
-        hrany.push_back({std::stoi(v), std::stoi(u)});
+        int v1 = std::stoi(v);
+        int u1 = std::stoi(u);
+        if (v1 < u1) {
+            hrany.push_back({v1, u1});
+        }
+        else {
+           hrany.push_back({u1, v1}); 
+        }
         zoznamHran = hranyNajdene.suffix();
     }
 
@@ -117,5 +124,78 @@ bool VseobecneFunkcie::izomorfneGrafy(const AdjList& g1, int n1, const AdjList& 
     delete graf1;
     delete graf2;
     return vysl;
+}
+
+Hrany VseobecneFunkcie::kostraBFS(const AdjList& graf, int n) {
+    std::set<int> navstiveneVrchy = {0};
+    std::set<int> naPrejdenie = {0};
+    Hrany hranyKostry;
+
+    while (naPrejdenie.size()) {
+        std::set<int> noveNaPrejdenie;
+        for (int u : naPrejdenie) {
+            for (int v : graf.find(u)->second) {
+                if (navstiveneVrchy.find(v) == navstiveneVrchy.end()) {
+                    navstiveneVrchy.insert(v);
+                    std::vector<int> hrana ={u, v};
+                    if (v < u) {
+                        hrana = {v, u};
+                    }
+                    hranyKostry.push_back(hrana);
+                    noveNaPrejdenie.insert(v);
+                }
+            }
+            
+        }
+        naPrejdenie.clear();
+        naPrejdenie.insert(noveNaPrejdenie.begin(), noveNaPrejdenie.end());
+        noveNaPrejdenie.clear();
+    }
+
+    return hranyKostry;
+}
+
+void VseobecneFunkcie::vypisGraf(const Hrany& graf) {
+        std::cout << "[";
+        bool prve = true;
+        for (auto hrana : graf) {
+            if (prve) {
+                prve = false;
+            }
+            else {
+                std::cout << ", ";
+            }
+            std::cout  << "(" << hrana[0] << ", " << hrana[1] << ")";
+        }
+        std::cout << "]" << std::endl;
+}
+
+void VseobecneFunkcie::porovnamieKostier(std::string& g1, int n1, std::string& g2, int n2) {
+    auto hrany1 = VseobecneFunkcie::stringNaHrany(g1);
+    auto hrany2 = VseobecneFunkcie::stringNaHrany(g2);
+    std::cout << "prvy graf: ";
+    const std::map<Strom*, int> triedyKostier1 = VseobecneFunkcie::generovanieKostier(hrany1, n1, "kostryG1.txt");
+    std::cout << "druhy graf: ";
+    const std::map<Strom*, int> triedyKostier2 = VseobecneFunkcie::generovanieKostier(hrany2, n2, "kostryG2.txt");
+    std::cout << "spolocne kostry:" << std::endl;
+
+    unsigned long long spolocne = 0;
+    for (auto it1 = triedyKostier1.begin(); it1 != triedyKostier1.end(); it1++) {
+        for (auto it2 = triedyKostier2.begin(); it2 != triedyKostier2.end(); it2++) {
+            if (it1->first->suIzomorfne(it2->first)) {
+                //std::cout << "izom\n";
+                spolocne++;
+                VseobecneFunkcie::vypisGraf(it1->first->hranyStromu());
+            }
+        }
+    }
+
+    for (auto it = triedyKostier1.begin(); it != triedyKostier1.end(); it++) {
+        delete it->first;
+    }
+    for (auto it = triedyKostier2.begin(); it != triedyKostier2.end(); it++) {
+        delete it->first;
+    }
+    std::cout << std::endl << spolocne << " spolocnych kostier" << std::endl;
 }
 
