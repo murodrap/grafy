@@ -76,7 +76,7 @@ long long VypocetKostier::gauss(int n) {
             vysl *= matica[i][i];
         }
 
-    return abs(round(vysl));
+    return llabs(llround(vysl));
 
 
 }
