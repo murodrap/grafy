@@ -1,0 +1,16 @@
+#!/bin/bash
+SECONDS=0
+
+n=$1;
+k=$2;
+g=$3;
+
+GenReg $n $k $g -e -a stdout | kostryRegularne $n $k;
+
+subor=${n}_${k}_${g}.erg;
+cat $subor >> maxMinReg${k}-${n}.txt;
+rm $subor;
+
+echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}.txt
+echo "trvanie celeho spracovania je $SECONDS sekund";
+exit 0;
