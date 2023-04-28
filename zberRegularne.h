@@ -8,7 +8,7 @@
 
 class SpracujVysledky {
     
-    std::string suborZ;
+    
     
 
     int maxDrzanych = 1000;
@@ -21,12 +21,13 @@ class SpracujVysledky {
     
     virtual void zapisDoSUboru();
     std::pair<unsigned long long, const Grafy> nacitanieVyslPreJedenGraf(std::ifstream& subor);
-    void vyhodnotenieVysledkovSuboru(int cast);
+    virtual void vyhodnotenieVysledkovSuboru(int cast);
 
 protected:
     int n;
     int reg;
     int pocetSuborov;
+    std::string suborZ;
     Grafy maxG;
     Grafy minG;
     unsigned long long maxK = 1;

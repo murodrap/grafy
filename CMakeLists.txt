@@ -45,6 +45,11 @@ add_executable(zberBiregularne
     zberRegularne.cpp
     zberBiregularne.cpp)
 
+add_executable(zberTriedy
+    mainZberTriedy.cpp
+    zberRegularne.cpp
+    zberTriedy.cpp)
+
 add_executable(grafyFunkcie
     mainVseobecne.cpp
     vseobecne.cpp
