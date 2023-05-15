@@ -15,12 +15,12 @@ class VypocetKostier
     double maxH(int pocet);
     //using Matica = double[][];
     long long gauss(int n);
-    unsigned long long kofaktor(int n, int r, int s);
+    long long kofaktor(int n, int r, int s);
     
 public:
     
     using Hrany = std::vector<std::vector<int>>;
-    unsigned long long celkovyVypocet(const Hrany& hrany);
+    long long celkovyVypocet(const Hrany& hrany);
     VypocetKostier(int n2, int reg2)
     : n(n2)
     , reg(reg2)

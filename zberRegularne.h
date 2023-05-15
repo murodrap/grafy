@@ -15,12 +15,12 @@ class SpracujVysledky {
 
     using Grafy = std::vector<std::string>;
     
-    void kontrolaMin(unsigned long long pocet, const Grafy& grafy);
-    void kontrolaMax(unsigned long long pocet, const Grafy& grafy);
+    void kontrolaMin(long long pocet, const Grafy& grafy);
+    void kontrolaMax(long long pocet, const Grafy& grafy);
     
     
     virtual void zapisDoSUboru();
-    std::pair<unsigned long long, const Grafy> nacitanieVyslPreJedenGraf(std::ifstream& subor);
+    std::pair<long long, const Grafy> nacitanieVyslPreJedenGraf(std::ifstream& subor);
     virtual void vyhodnotenieVysledkovSuboru(int cast);
 
 protected:
@@ -30,8 +30,8 @@ protected:
     std::string suborZ;
     Grafy maxG;
     Grafy minG;
-    unsigned long long maxK = 1;
-    unsigned long long minK = ULLONG_MAX;
+    long long maxK = 1;
+    long long minK = ULLONG_MAX;
 
     void grafyDoSuboru(std::string typ, unsigned long long pocet, const Grafy& grafy, std::ofstream& subor);
 

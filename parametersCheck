@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if ! (( $(echo $1 | grep -o "^[1-9]\+[0-9]*$") ))
+then
+    echo $2" is in wrong format"
+    exit 1
+fi
+exit 0;

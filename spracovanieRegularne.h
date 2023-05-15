@@ -19,8 +19,8 @@ class SpracujCele {
     using Hrany = std::vector<std::vector<int>>;
     std::vector<Hrany> maxG;
     std::vector<Hrany> minG;
-    unsigned long long maxK = 1;
-    unsigned long long minK = ULLONG_MAX;
+    long long maxK = 1;
+    long long minK = ULLONG_MAX;
     
     
     using Riadky = std::vector<std::string>;
@@ -28,7 +28,7 @@ class SpracujCele {
     virtual void jedenGraf(const Riadky& graf);
     long podlaVzorca();
 
-    void grafyDoSuboru(unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
+    void grafyDoSuboru(long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
     virtual void zapisDoSUboru();
 
 protected:
@@ -36,7 +36,7 @@ protected:
     int n;
     std::ofstream suborDo;
     VypocetKostier pocitadlo;
-    void kontrolaHodnot(unsigned long long pocet, const Hrany& hrany);
+    void kontrolaHodnot(long long pocet, const Hrany& hrany);
     Hrany spracujGraf(const Riadky& riadky);
 
 

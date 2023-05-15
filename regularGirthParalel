@@ -1,13 +1,45 @@
 #!/bin/bash
 SECONDS=0
 
+if (($# != 4))
+  then
+    echo "Wrong number of arguments"
+    exit 1
+fi
+
 pocetCasti=$1;
 n=$2;
 k=$3;
 g=$4;
 
+if ! parametersCheck $pocetCasti j
+then 
+    exit 1
+fi
+
+if ! parametersCheck $n n
+then 
+    exit 1
+fi
+
+if ! parametersCheck $k k
+then 
+    exit 1
+fi
+
+if (($k >= $n))
+  then
+    echo "k can't be higher than n"
+    exit 1
+fi
+
+if ! parametersCheck $g t
+then 
+    exit 1
+fi
+
 for i in $(eval echo {1..${pocetCasti}}); do
-  sh -c "GenReg $n $k $g -e -a stdout -m $i $pocetCasti | kostryRegularne out-graf-$i $n $k" &
+  GenReg $n $k $g -e -a stdout -m $i $pocetCasti | kostryRegularne out-graf-$i $n $k &
 done
 
 wait;
@@ -17,10 +49,16 @@ eval rm out-graf-{1..${pocetCasti}};
 
 for i in $(eval echo {1..${pocetCasti}}); do
   subor=${n}_${k}_${g}#${i}.erg
+  if ((n < 10))
+  then
+    subor=0${n}_${k}_3.erg
+  fi
   cat $subor >> maxMinReg${k}-${n}-${pocetCasti}.txt
   rm $subor
 done
 
 echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}-${pocetCasti}.txt
 echo "trvanie celeho spracovania je $SECONDS sekund";
+
+mv maxMinReg${k}-${n}-${pocetCasti}.txt maxMinRegGirth${k}-${n}-${g}-${pocetCasti}.txt
 exit 0;

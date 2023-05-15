@@ -175,7 +175,7 @@ const std::map<Strom*, int> Onete::generovanieKostier(const Hrany& hrany2) {
 
     std::vector<int> ind = std::vector<int>(n - 1);
     generovanieMoznosti(n - 1, ind, 0);
-    std::cout << std::endl << "bolo vygenerovanych "<< pocetKostrier << " kostier, " << triedyIzomorfizmuPocty.size() << " tried" << std::endl;
+    std::cout << std::endl <<  pocetKostrier << " spanning trees generated, " << triedyIzomorfizmuPocty.size() << " isomorphism classes" << std::endl;
 
     return triedyIzomorfizmuPocty;
     
@@ -184,7 +184,7 @@ const std::map<Strom*, int> Onete::generovanieKostier(const Hrany& hrany2) {
 void Onete::zapisDoSuboru(std::string nazov) {
     std::ofstream subor(nazov);
 
-    subor << pocetKostrier << " kostier, " << triedyIzomorfizmuPocty.size() << " tried" << std::endl;
+    subor << pocetKostrier << " spanning trees, " << triedyIzomorfizmuPocty.size() << " isomorphism classes" << std::endl;
     for (auto it = triedyIzomorfizmuPocty.begin(); it != triedyIzomorfizmuPocty.end(); it++) {
         subor << it->second << std::endl;
         subor << "[";

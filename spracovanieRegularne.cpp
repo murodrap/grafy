@@ -14,7 +14,7 @@
 
 using Hrany = std::vector<std::vector<int>>;
 
-void SpracujCele::kontrolaHodnot(unsigned long long pocet, const Hrany& hrany) {
+void SpracujCele::kontrolaHodnot(long long pocet, const Hrany& hrany) {
 
     if (pocet == maxK) {
         if (maxG.size() < maxDrzanych) {
@@ -92,7 +92,7 @@ Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
     return hrany;
 }
 
-void SpracujCele::grafyDoSuboru(unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub) {
+void SpracujCele::grafyDoSuboru(long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub) {
     sub <<  grafy.size() << " " << pocet << "\n";
     
     for (const Hrany& graf : grafy) {
@@ -130,7 +130,6 @@ void SpracujCele::jedenGraf(const Riadky& graf) {
 
 void SpracujCele::celySubor() {
     Riadky vrcholy(n);
-    unsigned long long spracovanych = 0;
     int index = 0;
     std::string riadok;
     bool zacatyGraf = false;
@@ -150,7 +149,6 @@ void SpracujCele::celySubor() {
             if (index == n) {
                 jedenGraf(vrcholy);
                 index = 0;
-                spracovanych++;
                 zacatyGraf = false;
             }
         }
