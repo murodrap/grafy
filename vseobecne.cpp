@@ -173,11 +173,11 @@ void VseobecneFunkcie::vypisGraf(const Hrany& graf) {
 void VseobecneFunkcie::porovnamieKostier(std::string& g1, int n1, std::string& g2, int n2) {
     auto hrany1 = VseobecneFunkcie::stringNaHrany(g1);
     auto hrany2 = VseobecneFunkcie::stringNaHrany(g2);
-    std::cout << "prvy graf: ";
+    std::cout << "first graph: ";
     const std::map<Strom*, int> triedyKostier1 = VseobecneFunkcie::generovanieKostier(hrany1, n1, "kostryG1.txt");
-    std::cout << "druhy graf: ";
+    std::cout << "second graph: ";
     const std::map<Strom*, int> triedyKostier2 = VseobecneFunkcie::generovanieKostier(hrany2, n2, "kostryG2.txt");
-    std::cout << "spolocne kostry:" << std::endl;
+    std::cout << "unlabeled spanning trees present in both graphs:" << std::endl;
 
     unsigned long long spolocne = 0;
     for (auto it1 = triedyKostier1.begin(); it1 != triedyKostier1.end(); it1++) {
@@ -196,6 +196,6 @@ void VseobecneFunkcie::porovnamieKostier(std::string& g1, int n1, std::string& g
     for (auto it = triedyKostier2.begin(); it != triedyKostier2.end(); it++) {
         delete it->first;
     }
-    std::cout << std::endl << spolocne << " spolocnych kostier" << std::endl;
+    std::cout << std::endl << spolocne << " total" << std::endl;
 }
 

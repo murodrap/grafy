@@ -22,14 +22,14 @@ class VseobecneFunkcie
     public:
         
         static bool existujeGraf(int n1, int k1, int n2, int k2);
-        static unsigned long long pocetKostier(const Hrany& hrany, int reg, int n) {
+        static long long pocetKostier(const Hrany& hrany, int reg, int n) {
             VypocetKostier poc = VypocetKostier(n, reg);
-            unsigned long long kostier = poc.celkovyVypocet(hrany);
+            long long kostier = poc.celkovyVypocet(hrany);
             poc.koniec();
             return kostier;
             
         }
-        static unsigned long long pocetKostier(std::string& hrany, int reg, int n) {
+        static long long pocetKostier(std::string& hrany, int reg, int n) {
             return pocetKostier(stringNaHrany(hrany), reg, n);
         }
         static bool izomorfneGrafy(std::string& g1, int n1, std::string& g2, int n2);

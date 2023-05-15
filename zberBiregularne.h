@@ -18,7 +18,7 @@ public:
     : SpracujVysledky(subor, pocet, n2, reg12)
     , reg2(reg22)
     {
-        std::cout << "zberanie vysledkov pre " << pocet << " suborov" << std::endl;
+        std::cout << "zberanie vysledkov pre biregularne grafy a " << pocet << " suborov" << std::endl;
 
     };
 };

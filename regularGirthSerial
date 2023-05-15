@@ -1,8 +1,7 @@
-
 #!/bin/bash
 SECONDS=0
 
-if (($# != 2))
+if (($# != 3))
   then
     echo "Wrong number of arguments"
     exit 1
@@ -10,6 +9,7 @@ fi
 
 n=$1;
 k=$2;
+g=$3;
 
 if ! parametersCheck $n n
 then 
@@ -27,10 +27,14 @@ if (($k >= $n))
     exit 1
 fi
 
+if ! parametersCheck $g t
+then 
+    exit 1
+fi
 
-GenReg $n $k -e -a stdout | kostryRegularne $n $k;
+GenReg $n $k $g -e -a stdout | kostryRegularne $n $k;
 
-subor=${n}_${k}_3.erg;
+subor=${n}_${k}_${g}.erg;
 if ((n < 10))
 then
     subor=0${n}_${k}_3.erg
@@ -41,4 +45,6 @@ rm $subor;
 
 echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}.txt
 echo "trvanie celeho spracovania je $SECONDS sekund";
+
+mv maxMinReg${k}-${n}.txt maxMinRegGirth${k}-${n}-${g}.txt;
 exit 0;

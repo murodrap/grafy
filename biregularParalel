@@ -1,7 +1,7 @@
 #!/bin/bash
 SECONDS=0
 
-if (($# != 3))
+if (($# != 4))
   then
     echo "Wrong number of arguments"
     exit 1
@@ -10,6 +10,7 @@ fi
 pocetCasti=$1;
 n=$2;
 k=$3;
+k2=$4;
 
 if ! parametersCheck $pocetCasti j
 then 
@@ -32,26 +33,32 @@ if (($k >= $n))
     exit 1
 fi
 
+if ! parametersCheck $k2 k_1
+then 
+    exit 1
+fi
 
 for i in $(eval echo {1..${pocetCasti}}); do
-  GenReg $n $k -e -a stdout -m $i $pocetCasti | kostryRegularne out-graf-$i $n $k &
+  GenReg $n $k -e -a stdout -m $i $pocetCasti | kostryBiregularne out-graf-$i $n $k $k2 &
 done
 
 wait;
-zberRegularne out-graf $pocetCasti $n $k;
+zberBiregularne out-graf $pocetCasti $n $k $k2;
 
 eval rm out-graf-{1..${pocetCasti}};
 
 for i in $(eval echo {1..${pocetCasti}}); do
   subor=${n}_${k}_3#${i}.erg
+
   if ((n < 10))
   then
     subor=0${n}_${k}_3.erg
   fi
-  cat $subor >> maxMinReg${k}-${n}-${pocetCasti}.txt
+
+  cat $subor >> maxMinBireg${k}-${n}-${k2}-${pocetCasti}.txt
   rm $subor
 done
 
-echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}-${pocetCasti}.txt
+echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinBireg${k}-${n}-${k2}-${pocetCasti}.txt
 echo "trvanie celeho spracovania je $SECONDS sekund";
 exit 0;

@@ -76,16 +76,16 @@ long long VypocetKostier::gauss(int n) {
             vysl *= matica[i][i];
         }
 
-    return abs(round(vysl));
+    return llabs(llround(vysl));
 
 
 }
 
-unsigned long long VypocetKostier::kofaktor(int n, int r, int s) {
-    return (unsigned long long) (pow(-1, r+s) * VypocetKostier::gauss(n-1));
+long long VypocetKostier::kofaktor(int n, int r, int s) {
+    return (long long) (pow(-1, r+s) * VypocetKostier::gauss(n-1));
 }
 
-unsigned long long VypocetKostier::celkovyVypocet(const Hrany& hrany) {
+long long VypocetKostier::celkovyVypocet(const Hrany& hrany) {
     for (int i= 0; i < n-1; i++) {
         memset(matica[i], 0, (n - 1)*sizeof(*matica[i]));
     }

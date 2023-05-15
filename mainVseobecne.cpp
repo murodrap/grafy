@@ -6,49 +6,46 @@
 
 void pocitanieKostier() {
   std::string graf;
-  std::cout << "zadajte pocet vrcholov: "; 
+  std::cout << "number of vertices: "; 
   std::getline(std::cin, graf);
   int n = std::stoi(graf);
 
-  std::cout << "zadajte edge list grafu: ";
+  std::cout << "edge list of the graph: ";
   std::getline(std::cin, graf);
   if (graf.empty()) {
-    std::cout << "prazdny graf" << std::endl;
+    std::cout << "graph has no edges" << std::endl;
   }
-  std::cout << "pocet kostier v zadanom grafe je " << VseobecneFunkcie::pocetKostier(graf, 0, n) << std::endl;
+  std::cout << "number of spanning trees in the graph is: " << VseobecneFunkcie::pocetKostier(graf, 0, n) << std::endl;
 }
 
 void izomorfizmus() {
   std::string graf1;
   std::string graf2;
-  std::cout << "zadajte pocet vrcholov prveho grafu: "; 
+  std::cout << "number of vertices: "; 
   std::getline(std::cin, graf1);
   int n1 = std::stoi(graf1);
-  std::cout << "zadajte edge list prveho grafu: ";
+  std::cout << "edge list of first graph: ";
   std::getline(std::cin, graf1);
 
-  std::cout << "zadajte pocet vrcholov druheho grafu: "; 
+  std::cout << "edge list of second graph: ";
   std::getline(std::cin, graf2);
-  int n2 = std::stoi(graf2);
-  std::cout << "zadajte edge list druheho grafu: ";
-  std::getline(std::cin, graf2);
-  if (VseobecneFunkcie::izomorfneGrafy(graf1, n1, graf2, n2)) {
-    std::cout << "grafy su izomorfne" << std::endl;
+  if (VseobecneFunkcie::izomorfneGrafy(graf1, n1, graf2, n1)) {
+    std::cout << "i" << std::endl;
   }
   else {
-    std::cout << "grafy nie su izomorfne" << std::endl;
+    std::cout << "non-isomorphic" << std::endl;
   }
 }
 
 void generovanieKostier() {
   std::string graf;
-  std::cout << "zadajte pocet vrcholov grafu: ";
+  std::cout << "number of vertices: ";
   std::getline(std::cin, graf);
   int n = std::stoi(graf);
-  std::cout << "zadajte edge list grafu: ";
+  std::cout << "edge list of the graph: ";
   std::getline(std::cin, graf);
   std::string subor;
-  std::cout << "zadajte nazov vystupneho suboru: ";
+  std::cout << "name of output file: ";
   std::getline(std::cin, subor);
   const std::map<Strom*, int> triedy = VseobecneFunkcie::generovanieKostier(graf, n, subor);
   for (auto it = triedy.begin(); it != triedy.end(); it++) {
@@ -59,29 +56,26 @@ void generovanieKostier() {
 void porovnanieKostier() {
   std::string graf1;
   std::string graf2;
-  std::cout << "zadajte pocet vrcholov prveho grafu: "; 
+  std::cout << "number of vertices: "; 
   std::getline(std::cin, graf1);
   int n1 = std::stoi(graf1);
-  std::cout << "zadajte edge list prveho grafu: ";
+  std::cout << "edge list of first graph: ";
   std::getline(std::cin, graf1);
 
-  std::cout << "zadajte pocet vrcholov druheho grafu: "; 
-  std::getline(std::cin, graf2);
-  int n2 = std::stoi(graf2);
-  std::cout << "zadajte edge list druheho grafu: ";
+  std::cout << "edge list of second graph: ";
   std::getline(std::cin, graf2);
 
-  VseobecneFunkcie::porovnamieKostier(graf1, n1, graf2, n2);
+  VseobecneFunkcie::porovnamieKostier(graf1, n1, graf2, n1);
 }
 
 void ponuka() {
-  std::cout << "**********************" << std::endl;
-  std::cout << "pocet kostier grafu: 1" << std::endl;
-  std::cout << "izomorfizmus grafov: 2" << std::endl;
-  std::cout << "vsetky kostry grafu: 3" << std::endl;
-  std::cout << "porovnanie kostier grafov: 4" << std::endl;
-  std::cout << "koniec: 5" << std::endl;
-  std::cout << "**********************" << std::endl;
+  std::cout << "===============================" << std::endl;
+  std::cout << "spanning tree counting: 1" << std::endl;
+  std::cout << "tree isomporphism: 2" << std::endl;
+  std::cout << "spanning tree enumeration: 3" << std::endl;
+  std::cout << "spanning tree intersection: 4" << std::endl;
+  std::cout << "exit: 5" << std::endl;
+  std::cout << "===============================" << std::endl;
   
   std::string vyber;
   std::getline(std::cin, vyber);

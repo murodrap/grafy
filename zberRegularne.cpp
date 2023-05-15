@@ -15,7 +15,7 @@
 using Grafy = std::vector<std::string>;
 
 
-void SpracujVysledky::kontrolaMin(unsigned long long pocet, const Grafy& grafy) {
+void SpracujVysledky::kontrolaMin(long long pocet, const Grafy& grafy) {
     if (pocet == minK) {
         minG.insert(minG.end(), grafy.begin(), grafy.end());
     }
@@ -27,7 +27,7 @@ void SpracujVysledky::kontrolaMin(unsigned long long pocet, const Grafy& grafy) 
     }
 }
 
-void SpracujVysledky::kontrolaMax(unsigned long long pocet, const Grafy& grafy) {
+void SpracujVysledky::kontrolaMax(long long pocet, const Grafy& grafy) {
     if (pocet == maxK) {
         if (maxG.size() < maxDrzanych) {
             maxG.insert(maxG.end(), grafy.begin(), grafy.end());
@@ -69,12 +69,12 @@ void SpracujVysledky::zapisDoSUboru() {
     
 }
 
-std::pair<unsigned long long, const Grafy> SpracujVysledky::nacitanieVyslPreJedenGraf(std::ifstream& subor) {
+std::pair<long long, const Grafy> SpracujVysledky::nacitanieVyslPreJedenGraf(std::ifstream& subor) {
     std::string riadok;
     std::string kus;
     std::getline(subor, riadok);
     std::istringstream iss(riadok);
-    unsigned long long kostier;
+    long long kostier;
     int pocetGrafov;
     iss >> kus;
     if (kus == "0") {
@@ -106,8 +106,8 @@ void SpracujVysledky::vyhodnotenieVysledkovSuboru(int cast) {
         return;
     }
 
-    std::pair<unsigned long long, const Grafy> vyslG = nacitanieVyslPreJedenGraf(subor);
-    unsigned long long kostier = vyslG.first;
+    std::pair<long long, const Grafy> vyslG = nacitanieVyslPreJedenGraf(subor);
+    long long kostier = vyslG.first;
     if (kostier == 0) {
         subor.close();
         return;
@@ -116,8 +116,8 @@ void SpracujVysledky::vyhodnotenieVysledkovSuboru(int cast) {
 
     kontrolaMin(kostier, grafy);
 
-    std::pair<unsigned long long, const Grafy> vyslG2 = nacitanieVyslPreJedenGraf(subor);
-    unsigned long long kostier2 = vyslG2.first;
+    std::pair<long long, const Grafy> vyslG2 = nacitanieVyslPreJedenGraf(subor);
+    long long kostier2 = vyslG2.first;
     const Grafy& grafy2 = vyslG2.second;
 
     kontrolaMax(kostier2, grafy2);

@@ -22,7 +22,7 @@ void SpracujCeleBiregularne::kombinacieHran(int ostavaDlzky, int odIndexu, const
     if (!ostavaDlzky) {
         Hrany hranyGrafu = Hrany((n*reg + reg2) / 2);
         copy(vysledneHrany.begin(), vysledneHrany.end(), hranyGrafu.begin());
-        unsigned long long kostrier = pocitadlo.celkovyVypocet(hranyGrafu);
+        long long kostrier = pocitadlo.celkovyVypocet(hranyGrafu);
         kontrolaHodnot(kostrier, hranyGrafu);
         return;
     }
