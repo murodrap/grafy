@@ -32,16 +32,16 @@ then
     exit 1
 fi
 
-GenReg $n $k $g -e -a stdout | kostryRegularne $n $k;
+GenReg $n $k $g -e -a stdout | spanningTreesRegular $n $k;
 
-subor=${n}_${k}_${g}.erg;
+file=${n}_${k}_${g}.erg;
 if ((n < 10))
 then
-    subor=0${n}_${k}_3.erg
+    file=0${n}_${k}_3.erg
 fi
 
-cat $subor >> maxMinReg${k}-${n}.txt;
-rm $subor;
+cat $file >> maxMinReg${k}-${n}.txt;
+rm $file;
 
 echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}.txt
 echo "trvanie celeho spracovania je $SECONDS sekund";

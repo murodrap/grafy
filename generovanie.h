@@ -6,8 +6,8 @@
 #include <climits>
 #include <string>
 #include <fstream>
-#include "vypocetKostier.h"
-#include "vseobecne.h"
+#include "spanningTreeCounting.h"
+#include "generalGraphs.h"
 
 class Generator {
     int reg1;
@@ -15,22 +15,22 @@ class Generator {
     int reg2;
     int n2;
 
-    std::ofstream suborDo;
-    VypocetKostier pocitadlo;
+    std::ofstream fileTo;
+    SpanningTreeCounter counter;
 
     
-    using Hrany = std::vector<std::vector<int>>;
-    std::vector<Hrany> maxG;
-    std::vector<Hrany> minG;
+    using Edges = std::vector<std::vector<int>>;
+    std::vector<Edges> maxG;
+    std::vector<Edges> minG;
 
     unsigned long long maxK = 1;
     unsigned long long minK = ULLONG_MAX;
-    void kontrolaHodnot(unsigned long long pocet, const Hrany& hrany);
+    void updateValues(unsigned long long number, const Edges& edges);
 
-    void grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub);
-    void zapisDoSUboru();
+    void graphsToFile(std::string type, unsigned long long number, const std::vector<Edges>& graphs, std::ofstream& sub);
+    void writeToFile();
 
-    void vsetkyGrafy(std::vector<int>& ostavajuceStupne, Hrany& vybrateHrany, std::vector<int>& spojeniaDo);
+    void vsetkyGrafy(std::vector<int>& ostavajuceStupne, Edges& vybrateHrany, std::vector<int>& spojeniaDo);
 
 
 public:
@@ -39,10 +39,10 @@ public:
     , n1(n12)
     , reg2(reg22)
     , n2(n22)
-    , pocitadlo(VypocetKostier(n1 + n2, 0))
+    , counter(SpanningTreeCounter(n1 + n2, 0))
     {
-        std::cout << reg1 << " a " << reg2 << "-regularne grafy na " << n1 << " a " << n2 << " vrcholoch" << std::endl;
-        if (!VseobecneFunkcie::existujeGraf(n1, reg1, n2, reg2)) {
+        std::cout << reg1 << " a " << reg2 << "-regularne graphs na " << n1 << " a " << n2 << " vrcholoch" << std::endl;
+        if (!GeneralFunctionsForGraphs::checkGraphExistence(n1, reg1, n2, reg2)) {
             exit(1);
         }
     }

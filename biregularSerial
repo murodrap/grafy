@@ -32,17 +32,17 @@ then
     exit 1
 fi
 
-GenReg $n $k -e -a stdout | kostryBiregularne $n $k $k2;
+GenReg $n $k -e -a stdout | spanningTreesBiregular $n $k $k2;
 
-subor=${n}_${k}_3.erg;
+file=${n}_${k}_3.erg;
 
 if ((n < 10))
 then
-    subor=0${n}_${k}_3.erg
+    file=0${n}_${k}_3.erg
 fi
 
-cat $subor >> maxMinBireg${k}-${n}-${k2}.txt;
-rm $subor;
+cat $file >> maxMinBireg${k}-${n}-${k2}.txt;
+rm $file;
 
 echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinBireg${k}-${n}-${k2}.txt
 echo "trvanie celeho spracovania je $SECONDS sekund";

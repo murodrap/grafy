@@ -15,9 +15,9 @@ zberTriedy out-graf $pocetCasti $n $k;
 eval rm out-graf-{1..${pocetCasti}};
 
 for i in $(eval echo {1..${pocetCasti}}); do
-  subor=${n}_${k}_3#${i}.erg
-  cat $subor >> triedyKostier${k}-${n}-${pocetCasti}.txt
-  rm $subor
+  file=${n}_${k}_3#${i}.erg
+  cat $file >> triedyKostier${k}-${n}-${pocetCasti}.txt
+  rm $file
 done
 
 echo "trvanie celeho spracovania je $SECONDS sekund" >> triedyKostier${k}-${n}-${pocetCasti}.txt

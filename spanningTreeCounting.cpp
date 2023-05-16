@@ -6,18 +6,18 @@
 #include <iostream>
 #include <iomanip>
 #include <string.h>
-#include "vypocetKostier.h"
+#include "spanningTreeCounting.h"
 
 using Matica = std::vector<std::vector<double>>;
-using Hrany = std::vector<std::vector<int>>;
+using Edges = std::vector<std::vector<int>>;
 
-double VypocetKostier::maxH(int pocet) {
+double SpanningTreeCounter::maxValue(int number) {
 
     double najdene[2] {0., 0.};
-    for (int i = 0; i < pocet; i++) {
+    for (int i = 0; i < number; i++) {
         
-        double p = dvojiceHodnot[i][0];
-        double d = dvojiceHodnot[i][1];
+        double p = pairs[i][0];
+        double d = pairs[i][1];
         
         if (p > najdene[0]) {
             najdene[0] = p;
@@ -33,7 +33,7 @@ double VypocetKostier::maxH(int pocet) {
 }
 
 
-long long VypocetKostier::gauss(int n) {
+long long SpanningTreeCounter::gauss(int n) {
     int r1 = 0;
     int s1 = 0;
     int nas = 0;
@@ -45,24 +45,24 @@ long long VypocetKostier::gauss(int n) {
             std::vector<std::vector<double>> hodnoty(n-r1);
 
             for (int i = r1; i < n; i++) {
-                dvojiceHodnot[i-r1][0] = (double)std::abs(matica[i][s1]);
-                dvojiceHodnot[i-r1][1] = (double)i;
+                pairs[i-r1][0] = (double)std::abs(matrix[i][s1]);
+                pairs[i-r1][1] = (double)i;
             }
-            iMax = maxH(n - r1);
+            iMax = maxValue(n - r1);
             
-            if (matica[(int)iMax][s1] == 0) {
+            if (matrix[(int)iMax][s1] == 0) {
                 s1++;
             }
 
             else {
-                std::swap(matica[r1], matica[(int)iMax]);
+                std::swap(matrix[r1], matrix[(int)iMax]);
                 nas *= -1;
 
                 for (int i = r1+1; i < n; i++) {
-                    double f = matica[i][s1] / matica[r1][s1];
-                    matica[i][s1] = 0.;
+                    double f = matrix[i][s1] / matrix[r1][s1];
+                    matrix[i][s1] = 0.;
                     for (int j = s1+1; j < n; j++) {
-                        matica[i][j] -= matica[r1][j] * f;
+                        matrix[i][j] -= matrix[r1][j] * f;
                     }
                 }
 
@@ -73,7 +73,7 @@ long long VypocetKostier::gauss(int n) {
             
         double vysl = 1.;
         for (int i = 0; i < n; i++) {
-            vysl *= matica[i][i];
+            vysl *= matrix[i][i];
         }
 
     return llabs(llround(vysl));
@@ -81,36 +81,36 @@ long long VypocetKostier::gauss(int n) {
 
 }
 
-long long VypocetKostier::kofaktor(int n, int r, int s) {
-    return (long long) (pow(-1, r+s) * VypocetKostier::gauss(n-1));
+long long SpanningTreeCounter::kofaktor(int n, int r, int s) {
+    return (long long) (pow(-1, r+s) * SpanningTreeCounter::gauss(n-1));
 }
 
-long long VypocetKostier::celkovyVypocet(const Hrany& hrany) {
+long long SpanningTreeCounter::countForGraph(const Edges& edges) {
     for (int i= 0; i < n-1; i++) {
-        memset(matica[i], 0, (n - 1)*sizeof(*matica[i]));
+        memset(matrix[i], 0, (n - 1)*sizeof(*matrix[i]));
     }
    
 
-    for (const std::vector<int>& hrana : hrany) {
-        int u = hrana[0]-1;
-        int v = hrana[1]-1;
+    for (const std::vector<int>& edge : edges) {
+        int u = edge[0]-1;
+        int v = edge[1]-1;
         if (v >= 0 && u >= 0) {
-            matica[u][v] = -1.;
-            matica[v][u] = -1.;
+            matrix[u][v] = -1.;
+            matrix[v][u] = -1.;
         }
         if (!reg) { 
-            if (u >= 0) matica[u][u]++;
-            if (v >= 0) matica[v][v]++;
+            if (u >= 0) matrix[u][u]++;
+            if (v >= 0) matrix[v][v]++;
         }
 
     }
 
     if (reg) {
         for (int r = 0; r < n-1; r++) {
-            matica[r][r] = (double)reg;
+            matrix[r][r] = (double)reg;
         }
     }
 
 
-    return VypocetKostier::kofaktor(n, 0, 0);
+    return SpanningTreeCounter::kofaktor(n, 0, 0);
 }

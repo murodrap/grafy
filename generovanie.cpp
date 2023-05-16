@@ -8,68 +8,68 @@
 
 #include "generovanie.h"
 
-using Hrany = std::vector<std::vector<int>>;
+using Edges = std::vector<std::vector<int>>;
 
-void Generator::kontrolaHodnot(unsigned long long pocet, const Hrany& hrany) {
+void Generator::updateValues(unsigned long long number, const Edges& edges) {
 
-    if (pocet == maxK) {
-        maxG.push_back(hrany);
+    if (number == maxK) {
+        maxG.push_back(edges);
     }
 
-    if (pocet > maxK) {
-        maxK = pocet;
+    if (number > maxK) {
+        maxK = number;
         maxG.clear();
-        maxG.push_back(hrany);
+        maxG.push_back(edges);
     }
-    if (pocet == minK) {
-        minG.push_back(hrany);
+    if (number == minK) {
+        minG.push_back(edges);
     }
 
-    if (pocet < minK) {
-        minK = pocet;
+    if (number < minK) {
+        minK = number;
         minG.clear();
-        minG.push_back(hrany);
+        minG.push_back(edges);
     }
 }
 
-void Generator::grafyDoSuboru(std::string typ, unsigned long long pocet, const std::vector<Hrany>& grafy, std::ofstream& subor) {
-    subor << typ << " " << pocet << "\n";
+void Generator::graphsToFile(std::string type, unsigned long long number, const std::vector<Edges>& graphs, std::ofstream& file) {
+    file << type << " " << number << "\n";
         
-    for (const Hrany& graf : grafy) {
-        subor << "[";
+    for (const Edges& graph : graphs) {
+        file << "[";
         bool prve = true;
-        for (const std::vector<int>& hrana : graf) {
+        for (const std::vector<int>& edge : graph) {
             if (prve) {
                 prve = false;
             }
             else {
-                subor << ", ";
+                file << ", ";
             }
-            subor << "(" << hrana[0] << ", " << hrana[1] << ")";
+            file << "(" << edge[0] << ", " << edge[1] << ")";
         }
 
-        subor << "]\n";
+        file << "]\n";
     }
 
 }
 
-void Generator::zapisDoSUboru() {
+void Generator::writeToFile() {
     std::stringstream kamUkladat;
     kamUkladat << "maxMinBireg" << reg1 << "-" << n1 << "--" << reg2  << "-" << n2 << ".txt";
-    std::ofstream subor;
-    subor.open (kamUkladat.str());
-    if (subor.is_open()) {
-        grafyDoSuboru("min", minK, minG, subor);
-        grafyDoSuboru("max", maxK, maxG, subor);
+    std::ofstream file;
+    file.open (kamUkladat.str());
+    if (file.is_open()) {
+        graphsToFile("min", minK, minG, file);
+        graphsToFile("max", maxK, maxG, file);
 
-        subor.close();
+        file.close();
     }
     else {
-        std::cout << "Unepodarilo sa vytvorit subor a zapisat donho vysledky";
+        std::cout << "Unepodarilo sa vytvorit file a zapisat donho vysledky";
     }
 }
 
-void Generator::vsetkyGrafy(std::vector<int>& ostavajuceStupne, Hrany& vybrateHrany, std::vector<int>& spojeniaDo) {
+void Generator::vsetkyGrafy(std::vector<int>& ostavajuceStupne, Edges& vybrateHrany, std::vector<int>& spojeniaDo) {
     int u = -1;
     for (int i = 0; i < n1 + n2; i++) {
         if (ostavajuceStupne[i]) {
@@ -79,9 +79,9 @@ void Generator::vsetkyGrafy(std::vector<int>& ostavajuceStupne, Hrany& vybrateHr
     }
 
     if (u < 0) {
-        unsigned long long kostier = pocitadlo.celkovyVypocet(vybrateHrany);
+        unsigned long long kostier = counter.countForGraph(vybrateHrany);
         if (kostier) {
-            kontrolaHodnot(kostier, vybrateHrany);
+            updateValues(kostier, vybrateHrany);
         }
         
         return;
@@ -124,8 +124,8 @@ void Generator::generovanie() {
         stupne[n1 + i] = reg2;
     }
     std::vector<int> spojenia(n1 + n2);
-    Hrany h;
+    Edges h;
     vsetkyGrafy(stupne, h, spojenia);
-    zapisDoSUboru();
-    pocitadlo.koniec();
+    writeToFile();
+    counter.koniec();
 }

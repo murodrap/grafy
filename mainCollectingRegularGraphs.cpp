@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <iostream>
-#include "zberTriedy.h"
+#include "collectingRegularGraphs.h"
 
 
 int main(int argc, char *argv[])
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     std::string file(argv[1]);
 
-    SpracujVysledkyTriedy spr(file, std::atoi(argv[2]), std::atoi(argv[3]), std::atoi(argv[4]));
+    ColRegular spr(file, std::atoi(argv[2]), std::atoi(argv[3]), std::atoi(argv[4]));
     spr.collectResults();
 
     return 0;

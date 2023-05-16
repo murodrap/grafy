@@ -34,22 +34,22 @@ fi
 
 
 for i in $(eval echo {1..${pocetCasti}}); do
-  GenReg $n $k -e -a stdout -m $i $pocetCasti | kostryRegularne out-graf-$i $n $k &
+  GenReg $n $k -e -a stdout -m $i $pocetCasti | spanningTreesRegular out-graf-$i $n $k &
 done
 
 wait;
-zberRegularne out-graf $pocetCasti $n $k;
+resultsRegular out-graf $pocetCasti $n $k;
 
 eval rm out-graf-{1..${pocetCasti}};
 
 for i in $(eval echo {1..${pocetCasti}}); do
-  subor=${n}_${k}_3#${i}.erg
+  file=${n}_${k}_3#${i}.erg
   if ((n < 10))
   then
-    subor=0${n}_${k}_3.erg
+    file=0${n}_${k}_3.erg
   fi
-  cat $subor >> maxMinReg${k}-${n}-${pocetCasti}.txt
-  rm $subor
+  cat $file >> maxMinReg${k}-${n}-${pocetCasti}.txt
+  rm $file
 done
 
 echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}-${pocetCasti}.txt

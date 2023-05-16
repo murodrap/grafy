@@ -9,39 +9,39 @@
 #include <fstream>
 #include <chrono>
 
-#include "vypocetKostier.h"
-#include "spracovanieRegularne.h"
+#include "spanningTreeCounting.h"
+#include "processingRegularGraphs.h"
 
-using Hrany = std::vector<std::vector<int>>;
+using Edges = std::vector<std::vector<int>>;
 
-void SpracujCele::kontrolaHodnot(long long pocet, const Hrany& hrany) {
+void ProcRegular::updateValues(long long number, const Edges& edges) {
 
-    if (pocet == maxK) {
-        if (maxG.size() < maxDrzanych) {
-            maxG.push_back(hrany);
+    if (number == maxK) {
+        if (maxG.size() < maxStroredGraphs) {
+            maxG.push_back(edges);
         }
     }
 
-    if (pocet > maxK) {
-        maxK = pocet;
+    if (number > maxK) {
+        maxK = number;
         maxG.clear();
-        maxG.push_back(hrany);
+        maxG.push_back(edges);
     }
-    if (pocet == minK) {
-        if (minG.size() < maxDrzanych) {
-            minG.push_back(hrany);
+    if (number == minK) {
+        if (minG.size() < maxStroredGraphs) {
+            minG.push_back(edges);
         }
     }
 
-    if (pocet < minK) {
-        minK = pocet;
+    if (number < minK) {
+        minK = number;
         minG.clear();
-        minG.push_back(hrany);
+        minG.push_back(edges);
     }
 
 }
 
-long SpracujCele::podlaVzorca() {
+long ProcRegular::podlaVzorca() {
     std::map<int, int> hodn{{4, 16}, {6, 75}, {8, 256}, {12, 2112}};
 
 
@@ -58,20 +58,20 @@ long SpracujCele::podlaVzorca() {
     return trunc(pow(24, 2)) * stvorkove;
 }
 
-Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
-    Hrany hrany(n*reg/2);
+Edges ProcRegular::getEdges(const Lines& lines) {
+    Edges edges(n*reg/2);
     int index = 0;
-    for (const std::string& riadok : riadky) {
+    for (const std::string& riadok : lines) {
         std::stringstream ss(riadok);
-        std::string vrch;
+        std::string vertex;
         std::string susedia;
         
-        getline(ss, vrch, ':');
-        vrch.pop_back();
+        getline(ss, vertex, ':');
+        vertex.pop_back();
         getline(ss, susedia, ':');
         susedia.erase(0, 1);
         
-        int v = stoi(vrch);
+        int v = stoi(vertex);
         std::string sused;  
         std::stringstream ss2(susedia);
         while (!ss2.eof()) {
@@ -81,31 +81,31 @@ Hrany SpracujCele::spracujGraf(const Riadky& riadky) {
             }
             int u = stoi(sused);
             if (u > v) {
-                std::vector<int> hrana(2);
-                hrana[0] = v - 1;
-                hrana[1] = u - 1;
-                hrany[index] = hrana;
+                std::vector<int> edge(2);
+                edge[0] = v - 1;
+                edge[1] = u - 1;
+                edges[index] = edge;
                 index++;
             }
         }
     }
-    return hrany;
+    return edges;
 }
 
-void SpracujCele::grafyDoSuboru(long long pocet, const std::vector<Hrany>& grafy, std::ofstream& sub) {
-    sub <<  grafy.size() << " " << pocet << "\n";
+void ProcRegular::graphsToFile(long long number, const std::vector<Edges>& graphs, std::ofstream& sub) {
+    sub <<  graphs.size() << " " << number << "\n";
     
-    for (const Hrany& graf : grafy) {
+    for (const Edges& graph : graphs) {
         sub << "[";
         bool prve = true;
-        for (const std::vector<int>& hrana : graf) {
+        for (const std::vector<int>& edge : graph) {
             if (prve) {
                 prve = false;
             }
             else {
                 sub << ", ";
             }
-            sub << "(" << hrana[0] << ", " << hrana[1] << ")";
+            sub << "(" << edge[0] << ", " << edge[1] << ")";
         }
 
         sub << "]\n";
@@ -114,22 +114,22 @@ void SpracujCele::grafyDoSuboru(long long pocet, const std::vector<Hrany>& grafy
 
 }
 
-void SpracujCele::zapisDoSUboru(){
-    suborDo << "min ";
-    grafyDoSuboru(minK, minG, suborDo);
-    suborDo << "max ";
-    grafyDoSuboru(maxK, maxG, suborDo);
+void ProcRegular::writeToFile(){
+    fileTo << "min ";
+    graphsToFile(minK, minG, fileTo);
+    fileTo << "max ";
+    graphsToFile(maxK, maxG, fileTo);
 
 }
 
-void SpracujCele::jedenGraf(const Riadky& graf) {
-    Hrany hrany = spracujGraf(graf);
-    long kostier = pocitadlo.celkovyVypocet(hrany);
-    kontrolaHodnot(kostier, hrany);
+void ProcRegular::processGraph(const Lines& graph) {
+    Edges edges = getEdges(graph);
+    long kostier = counter.countForGraph(edges);
+    updateValues(kostier, edges);
 }
 
-void SpracujCele::celySubor() {
-    Riadky vrcholy(n);
+void ProcRegular::processAll() {
+    Lines vrcholy(n);
     int index = 0;
     std::string riadok;
     bool zacatyGraf = false;
@@ -147,15 +147,15 @@ void SpracujCele::celySubor() {
             index++;
             
             if (index == n) {
-                jedenGraf(vrcholy);
+                processGraph(vrcholy);
                 index = 0;
                 zacatyGraf = false;
             }
         }
     }
 
-    zapisDoSUboru();
-    suborDo.close();
-    pocitadlo.koniec();
+    writeToFile();
+    fileTo.close();
+    counter.koniec();
 
 }

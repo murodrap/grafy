@@ -7,22 +7,22 @@
 #include <sstream>
 #include <fstream>
 
-#include "zberRegularne.h"
+#include "collectingRegularGraphs.h"
 
 
-class SpracujVysledkyTriedy : public SpracujVysledky{
-    std::ofstream suborDo;
-    void vyhodnotenieVysledkovSuboru(int cast) override;
+class SpracujVysledkyTriedy : public ColRegular{
+    std::ofstream fileTo;
+    void getResultsFromFile(int fileNumber) override;
 
 
 public:
-    SpracujVysledkyTriedy(std::string subor, int pocet, int n2, int reg2)
-    : SpracujVysledky(subor, pocet, n2, reg2)
-    , suborDo("triedy" + std::to_string(reg) + "-" + std::to_string(n) + "-" + std::to_string(pocetSuborov) + ".txt")
+    SpracujVysledkyTriedy(std::string file, int number, int n2, int reg2)
+    : ColRegular(file, number, n2, reg2)
+    , fileTo("triedy" + std::to_string(reg) + "-" + std::to_string(n) + "-" + std::to_string(numberOfFiles) + ".txt")
     {
-        std::cout << "zberanie vysledkov pre triedy a " << pocet << " suborov" << std::endl;
-        if (!suborDo.is_open()) {
-            std::cout << "Nepodarilo sa vytvorit subor a zapisat donho vysledky";
+        std::cout << "zberanie vysledkov pre triedy a " << number << " suborov" << std::endl;
+        if (!fileTo.is_open()) {
+            std::cout << "Nepodarilo sa vytvorit file a zapisat donho vysledky";
             exit(1);
         }
 

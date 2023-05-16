@@ -10,25 +10,25 @@
 #include <fstream>
 #include <chrono>
 
-#include "vsetkyKostry.h"
-#include "izomorfizmus.h"
+#include "unlabeledSpanningTrees.h"
+#include "isomorphismAHU.h"
 #include "spracovanieTriedy.h"
 
-using Hrany = std::vector<std::vector<int>>;
-using Riadky = std::vector<std::string>;
+using Edges = std::vector<std::vector<int>>;
+using Lines = std::vector<std::string>;
 
-void SpracujCeleTriedy::jedenGraf(const Riadky& graf) {
-    Hrany hrany = spracujGraf(graf);
-    unsigned long long pocetTried = o.generovanieKostier(hrany).size();
-    unsigned long long pocetKostier = o.kostry();
-    kostryTriedyPocty.emplace_back(std::make_pair(pocetKostier, pocetTried));
+void SpracujCeleTriedy::processGraph(const Lines& graph) {
+    Edges edges = getEdges(graph);
+    unsigned long long pocetTried = o.generateAllSpanningTrees(edges).size();
+    unsigned long long countSpanningTrees = o.getNumberOfSpanningTrees();
+    kostryTriedyPocty.emplace_back(std::make_pair(countSpanningTrees, pocetTried));
 }
 
-void SpracujCeleTriedy::zapisDoSUboru(){
-    suborDo << kostryTriedyPocty.size() << " grafov" << std::endl << std::endl;
+void SpracujCeleTriedy::writeToFile(){
+    fileTo << kostryTriedyPocty.size() << " grafov" << std::endl << std::endl;
 
     for (auto it = kostryTriedyPocty.begin(); it != kostryTriedyPocty.end(); it++) {
-        suborDo  << "kostier: " << it->first << ", tried: " << it->second << std::endl;
+        fileTo  << "kostier: " << it->first << ", tried: " << it->second << std::endl;
     }
-    o.vymazanieStromov();
+    o.deleteTrees();
 }

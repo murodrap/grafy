@@ -9,23 +9,23 @@
 
 #include <bits/stdc++.h>
 
-#include "izomorfizmus.h"
+#include "isomorphismAHU.h"
 
 
-std::string Strom::kodStromAHU(int koren) {
-    prejdeneVrcholy.clear();
-    prejdeneVrcholy.insert(koren);
-    return kodVrcholAHU(koren);
+std::string Tree::codeOfTreeAHU(int root) {
+    visitedVertices.clear();
+    visitedVertices.insert(root);
+    return codeOfVertexAHU(root);
 
 }
 
-std::pair<int, std::vector<int>> Strom::najvzdialenejsi(int v) {
+std::pair<int, std::vector<int>> Tree::mostDistantVertex(int v) {
     std::vector<int> c = {v};
     std::vector<std::pair<int, std::vector<int>>> naPrejdenie = {std::make_pair(v, c)};
     std::vector<std::pair<int, std::vector<int>>> predchadzajuce;
     
-    prejdeneVrcholy.clear();
-    prejdeneVrcholy.insert(v);
+    visitedVertices.clear();
+    visitedVertices.insert(v);
     
     while (!naPrejdenie.empty()) {
         std::vector<std::pair<int, std::vector<int>>> nove;
@@ -35,9 +35,9 @@ std::pair<int, std::vector<int>> Strom::najvzdialenejsi(int v) {
 
             std::vector<int>& cesta = vrchCesta.second;
             
-            for (int potomok : graf.find(u)->second) {
-                if (prejdeneVrcholy.find(potomok) == prejdeneVrcholy.end()) {
-                    prejdeneVrcholy.insert(potomok);
+            for (int potomok : graph.find(u)->second) {
+                if (visitedVertices.find(potomok) == visitedVertices.end()) {
+                    visitedVertices.insert(potomok);
 
                     std::vector<int> cestaRozsirena = cesta;
                     cestaRozsirena.push_back(potomok);
@@ -52,28 +52,28 @@ std::pair<int, std::vector<int>> Strom::najvzdialenejsi(int v) {
     return predchadzajuce[0];
 }
 
-std::vector<int> Strom::koreneVypocet() {
+std::vector<int> Tree::rootsSearch() {
 
     int x = 0;
-    std::pair<int, std::vector<int>> v1Cesta1 = najvzdialenejsi(x);
-    std::pair<int, std::vector<int>> v2Cesta2 = najvzdialenejsi(v1Cesta1.first);
+    std::pair<int, std::vector<int>> v1Cesta1 = mostDistantVertex(x);
+    std::pair<int, std::vector<int>> v2Cesta2 = mostDistantVertex(v1Cesta1.first);
     const std::vector<int>& cesta2 = v2Cesta2.second;
-    std::vector<int> korene = {cesta2[cesta2.size()/2]};
+    std::vector<int> getRoots = {cesta2[cesta2.size()/2]};
     
     if (!(cesta2.size() % 2)) {
-        korene.push_back(cesta2[cesta2.size()/2 - 1]);
+        getRoots.push_back(cesta2[cesta2.size()/2 - 1]);
     }
-    return korene;
+    return getRoots;
 
 }
 
-std::string Strom::kodVrcholAHU(int vrch) {
+std::string Tree::codeOfVertexAHU(int vertex) {
 
     std::vector<std::string> stredKodu;
-    for (int potomok : graf.find(vrch)->second) {
-        if (prejdeneVrcholy.find(potomok) == prejdeneVrcholy.end()) {
-            prejdeneVrcholy.insert(potomok);
-            stredKodu.emplace_back(kodVrcholAHU(potomok));
+    for (int potomok : graph.find(vertex)->second) {
+        if (visitedVertices.find(potomok) == visitedVertices.end()) {
+            visitedVertices.insert(potomok);
+            stredKodu.emplace_back(codeOfVertexAHU(potomok));
         }
     }
     std::sort(stredKodu.begin(), stredKodu.end(), std::greater<std::string>());
@@ -90,16 +90,16 @@ std::string Strom::kodVrcholAHU(int vrch) {
 }
 
 
-bool Strom::suIzomorfne(Strom* strom2) {
-    if (strom2->pocetVrcholov() != pocetVrcholov()) {
+bool Tree::checkIsomorphism(Tree* tree2) {
+    if (tree2->getNumberOfVertices() != getNumberOfVertices()) {
         return false;
     }
 
-    if (korene().size() != strom2->korene().size()) {
+    if (getRoots().size() != tree2->getRoots().size()) {
         return false;
     }
-    for (auto kod1 : kodyAHU()) {
-        for (auto kod2 : strom2->kodyAHU()) {
+    for (auto kod1 : getAHUcodes()) {
+        for (auto kod2 : tree2->getAHUcodes()) {
             if (kod1 == kod2) {
                 return true;
             }

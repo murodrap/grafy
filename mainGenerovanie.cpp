@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
    
     if (argc != 5) {
-        std::cout << "zly pocet argumentov" << std::endl;
+        std::cout << "zly number argumentov" << std::endl;
         return 1;
     }
 

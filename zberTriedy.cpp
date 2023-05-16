@@ -11,27 +11,27 @@
 #include "zberTriedy.h"
 
 
-void SpracujVysledkyTriedy::vyhodnotenieVysledkovSuboru(int cast) {
-    std::ifstream subor;
+void SpracujVysledkyTriedy::getResultsFromFile(int fileNumber) {
+    std::ifstream file;
     std::stringstream meno;
-    meno << suborZ << "-" << cast;
-    subor.open(meno.str());
-    if (!subor.is_open()) {
-        std::cout << "nepodarilo sa otvorit subor " << meno.str() << std::endl;
+    meno << fileFrom << "-" << fileNumber;
+    file.open(meno.str());
+    if (!file.is_open()) {
+        std::cout << "nepodarilo sa otvorit file " << meno.str() << std::endl;
         return;
     }
     std::string riadok;
-    std::getline(subor, riadok);
+    std::getline(file, riadok);
 
     std::istringstream iss(riadok);
     unsigned long long pocetGrafov;
     iss >> pocetGrafov;
-    std::getline(subor, riadok);
+    std::getline(file, riadok);
     for (unsigned long long i = 0; i < pocetGrafov; i++) {
-        std::getline(subor, riadok);
-        suborDo << riadok << std::endl;
+        std::getline(file, riadok);
+        fileTo << riadok << std::endl;
     }
    
-    subor.close();
-    suborDo.close();
+    file.close();
+    fileTo.close();
 }

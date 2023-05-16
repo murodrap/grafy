@@ -5,12 +5,12 @@
 #include <bits/stdc++.h>
 #include <string.h>
 
-#include "vypocetKostier.h"
-#include "vseobecne.h"
-#include "izomorfizmus.h"
+#include "spanningTreeCounting.h"
+#include "generalGraphs.h"
+#include "isomorphismAHU.h"
 
 
-bool VseobecneFunkcie::havelHakimi(int n1, int k1, int n2, int k2) {
+bool GeneralFunctionsForGraphs::havelHakimi(int n1, int k1, int n2, int k2) {
     std::vector<int> stupne;
     for (int i  = 0; i < n1; i++) {
         stupne.push_back(k1);
@@ -37,9 +37,9 @@ bool VseobecneFunkcie::havelHakimi(int n1, int k1, int n2, int k2) {
     return true;
 }
 
-bool VseobecneFunkcie::existujeGraf(int n1, int k1, int n2, int k2){
+bool GeneralFunctionsForGraphs::checkGraphExistence(int n1, int k1, int n2, int k2){
     if (k1 > n1 + n2 || k2 > n1 + n2) {
-        std::cout << "nie je mozne vytvorit graf bez nasobnych hran" << std::endl;
+        std::cout << "nie je mozne vytvorit graph bez nasobnych hran" << std::endl;
         return false;
     }
     if ((n1 * k1 + n2 * k2) % 2) {
@@ -54,8 +54,8 @@ bool VseobecneFunkcie::existujeGraf(int n1, int k1, int n2, int k2){
 }
 
 
-Hrany VseobecneFunkcie::stringNaHrany(std::string& zoznamHran) {
-    Hrany hrany;
+Edges GeneralFunctionsForGraphs::stringToEdges(std::string& listOfEdges) {
+    Edges edges;
 
     std::string znaky;
 
@@ -64,7 +64,7 @@ Hrany VseobecneFunkcie::stringNaHrany(std::string& zoznamHran) {
     std::smatch hranyNajdene;
     std::smatch vrcholyNajdene;
 
-    while (std::regex_search(zoznamHran, hranyNajdene, hranaRegex)) {
+    while (std::regex_search(listOfEdges, hranyNajdene, hranaRegex)) {
    
         std::string vr = hranyNajdene[0];
         std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
@@ -73,18 +73,18 @@ Hrany VseobecneFunkcie::stringNaHrany(std::string& zoznamHran) {
         int v1 = std::stoi(v);
         int u1 = std::stoi(u);
         if (v1 < u1) {
-            hrany.push_back({v1, u1});
+            edges.push_back({v1, u1});
         }
         else {
-           hrany.push_back({u1, v1}); 
+           edges.push_back({u1, v1}); 
         }
-        zoznamHran = hranyNajdene.suffix();
+        listOfEdges = hranyNajdene.suffix();
     }
 
-    return hrany;
+    return edges;
 }
 
-AdjList VseobecneFunkcie::stringNaAdjList(std::string& zoznamHran, int n) {
+AdjList GeneralFunctionsForGraphs::stringToAdjList(std::string& listOfEdges, int n) {
     AdjList adjList;
     for (int v = 0; v < n; v++) {
         adjList[v] = std::vector<int>();
@@ -97,51 +97,51 @@ AdjList VseobecneFunkcie::stringNaAdjList(std::string& zoznamHran, int n) {
     std::smatch hranyNajdene;
     std::smatch vrcholyNajdene;
 
-    while (std::regex_search(zoznamHran, hranyNajdene, hranaRegex)) {
+    while (std::regex_search(listOfEdges, hranyNajdene, hranaRegex)) {
         std::string vr = hranyNajdene[0];
         std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
         int v = std::stoi(vrcholyNajdene[1]);
         int u = std::stoi(vrcholyNajdene[2]);
         adjList[v].push_back(u);
         adjList[u].push_back(v);
-        zoznamHran = hranyNajdene.suffix();
+        listOfEdges = hranyNajdene.suffix();
     }
 
     return adjList;
 
 }
 
-bool VseobecneFunkcie::izomorfneGrafy(std::string& g1, int n1, std::string& g2, int n2) {
-    const AdjList adj1 = stringNaAdjList(g1, n1);
-    const AdjList adj2 = stringNaAdjList(g2, n2);
-    return izomorfneGrafy(adj1, n1, adj2, n2);
+bool GeneralFunctionsForGraphs::isomorphicGraphs(std::string& g1, int n1, std::string& g2, int n2) {
+    const AdjList adj1 = stringToAdjList(g1, n1);
+    const AdjList adj2 = stringToAdjList(g2, n2);
+    return isomorphicGraphs(adj1, n1, adj2, n2);
 }
 
-bool VseobecneFunkcie::izomorfneGrafy(const AdjList& g1, int n1, const AdjList& g2, int n2) {
-    Strom* graf1 = new Strom(g1, n1);
-    Strom* graf2 = new Strom(g2, n2);
-    bool vysl = graf1->suIzomorfne(graf2);
-    delete graf1;
+bool GeneralFunctionsForGraphs::isomorphicGraphs(const AdjList& g1, int n1, const AdjList& g2, int n2) {
+    Tree* graph1 = new Tree(g1, n1);
+    Tree* graf2 = new Tree(g2, n2);
+    bool vysl = graph1->checkIsomorphism(graf2);
+    delete graph1;
     delete graf2;
     return vysl;
 }
 
-Hrany VseobecneFunkcie::kostraBFS(const AdjList& graf, int n) {
+Edges GeneralFunctionsForGraphs::spanningTreeBFS(const AdjList& graph, int n) {
     std::set<int> navstiveneVrchy = {0};
     std::set<int> naPrejdenie = {0};
-    Hrany hranyKostry;
+    Edges hranyKostry;
 
     while (naPrejdenie.size()) {
         std::set<int> noveNaPrejdenie;
         for (int u : naPrejdenie) {
-            for (int v : graf.find(u)->second) {
+            for (int v : graph.find(u)->second) {
                 if (navstiveneVrchy.find(v) == navstiveneVrchy.end()) {
                     navstiveneVrchy.insert(v);
-                    std::vector<int> hrana ={u, v};
+                    std::vector<int> edge ={u, v};
                     if (v < u) {
-                        hrana = {v, u};
+                        edge = {v, u};
                     }
-                    hranyKostry.push_back(hrana);
+                    hranyKostry.push_back(edge);
                     noveNaPrejdenie.insert(v);
                 }
             }
@@ -155,37 +155,37 @@ Hrany VseobecneFunkcie::kostraBFS(const AdjList& graf, int n) {
     return hranyKostry;
 }
 
-void VseobecneFunkcie::vypisGraf(const Hrany& graf) {
+void GeneralFunctionsForGraphs::printGraph(const Edges& graph) {
         std::cout << "[";
         bool prve = true;
-        for (auto hrana : graf) {
+        for (auto edge : graph) {
             if (prve) {
                 prve = false;
             }
             else {
                 std::cout << ", ";
             }
-            std::cout  << "(" << hrana[0] << ", " << hrana[1] << ")";
+            std::cout  << "(" << edge[0] << ", " << edge[1] << ")";
         }
         std::cout << "]" << std::endl;
 }
 
-void VseobecneFunkcie::porovnamieKostier(std::string& g1, int n1, std::string& g2, int n2) {
-    auto hrany1 = VseobecneFunkcie::stringNaHrany(g1);
-    auto hrany2 = VseobecneFunkcie::stringNaHrany(g2);
+void GeneralFunctionsForGraphs::compareUnlabeledSpanningTrees(std::string& g1, int n1, std::string& g2, int n2) {
+    auto edges1 = GeneralFunctionsForGraphs::stringToEdges(g1);
+    auto hrany2 = GeneralFunctionsForGraphs::stringToEdges(g2);
     std::cout << "first graph: ";
-    const std::map<Strom*, int> triedyKostier1 = VseobecneFunkcie::generovanieKostier(hrany1, n1, "kostryG1.txt");
+    const std::map<Tree*, int> triedyKostier1 = GeneralFunctionsForGraphs::generateAllSpanningTrees(edges1, n1, "kostryG1.txt");
     std::cout << "second graph: ";
-    const std::map<Strom*, int> triedyKostier2 = VseobecneFunkcie::generovanieKostier(hrany2, n2, "kostryG2.txt");
+    const std::map<Tree*, int> triedyKostier2 = GeneralFunctionsForGraphs::generateAllSpanningTrees(hrany2, n2, "kostryG2.txt");
     std::cout << "unlabeled spanning trees present in both graphs:" << std::endl;
 
     unsigned long long spolocne = 0;
     for (auto it1 = triedyKostier1.begin(); it1 != triedyKostier1.end(); it1++) {
         for (auto it2 = triedyKostier2.begin(); it2 != triedyKostier2.end(); it2++) {
-            if (it1->first->suIzomorfne(it2->first)) {
+            if (it1->first->checkIsomorphism(it2->first)) {
                 //std::cout << "izom\n";
                 spolocne++;
-                VseobecneFunkcie::vypisGraf(it1->first->hranyStromu());
+                GeneralFunctionsForGraphs::printGraph(it1->first->getEdgesOfTree());
             }
         }
     }
