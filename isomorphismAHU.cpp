@@ -21,47 +21,47 @@ std::string Tree::codeOfTreeAHU(int root) {
 
 std::pair<int, std::vector<int>> Tree::mostDistantVertex(int v) {
     std::vector<int> c = {v};
-    std::vector<std::pair<int, std::vector<int>>> naPrejdenie = {std::make_pair(v, c)};
-    std::vector<std::pair<int, std::vector<int>>> predchadzajuce;
+    std::vector<std::pair<int, std::vector<int>>> nextVertices = {std::make_pair(v, c)};
+    std::vector<std::pair<int, std::vector<int>>> previousVertices;
     
     visitedVertices.clear();
     visitedVertices.insert(v);
     
-    while (!naPrejdenie.empty()) {
-        std::vector<std::pair<int, std::vector<int>>> nove;
-        for (auto vrchCesta : naPrejdenie) {
+    while (!nextVertices.empty()) {
+        std::vector<std::pair<int, std::vector<int>>> newPairs;
+        for (auto vertexPath : nextVertices) {
             
-            int u = vrchCesta.first;
+            int u = vertexPath.first;
 
-            std::vector<int>& cesta = vrchCesta.second;
+            std::vector<int>& path = vertexPath.second;
             
-            for (int potomok : graph.find(u)->second) {
-                if (visitedVertices.find(potomok) == visitedVertices.end()) {
-                    visitedVertices.insert(potomok);
+            for (int neighbour : graph.find(u)->second) {
+                if (visitedVertices.find(neighbour) == visitedVertices.end()) {
+                    visitedVertices.insert(neighbour);
 
-                    std::vector<int> cestaRozsirena = cesta;
-                    cestaRozsirena.push_back(potomok);
-                    nove.push_back({potomok,cestaRozsirena});
+                    std::vector<int> pathExtended = path;
+                    pathExtended.push_back(neighbour);
+                    newPairs.push_back({neighbour,pathExtended});
                 }
             }
         }
         
-        predchadzajuce = std::move(naPrejdenie);
-        naPrejdenie = std::move(nove);
+        previousVertices = std::move(nextVertices);
+        nextVertices = std::move(newPairs);
     }
-    return predchadzajuce[0];
+    return previousVertices[0];
 }
 
 std::vector<int> Tree::rootsSearch() {
 
     int x = 0;
-    std::pair<int, std::vector<int>> v1Cesta1 = mostDistantVertex(x);
-    std::pair<int, std::vector<int>> v2Cesta2 = mostDistantVertex(v1Cesta1.first);
-    const std::vector<int>& cesta2 = v2Cesta2.second;
-    std::vector<int> getRoots = {cesta2[cesta2.size()/2]};
+    std::pair<int, std::vector<int>> vertex1Path1 = mostDistantVertex(x);
+    std::pair<int, std::vector<int>> vertex2Path2 = mostDistantVertex(vertex1Path1.first);
+    const std::vector<int>& path2 = vertex2Path2.second;
+    std::vector<int> getRoots = {path2[path2.size()/2]};
     
-    if (!(cesta2.size() % 2)) {
-        getRoots.push_back(cesta2[cesta2.size()/2 - 1]);
+    if (!(path2.size() % 2)) {
+        getRoots.push_back(path2[path2.size()/2 - 1]);
     }
     return getRoots;
 
@@ -69,23 +69,23 @@ std::vector<int> Tree::rootsSearch() {
 
 std::string Tree::codeOfVertexAHU(int vertex) {
 
-    std::vector<std::string> stredKodu;
-    for (int potomok : graph.find(vertex)->second) {
-        if (visitedVertices.find(potomok) == visitedVertices.end()) {
-            visitedVertices.insert(potomok);
-            stredKodu.emplace_back(codeOfVertexAHU(potomok));
+    std::vector<std::string> codeOfSubtree;
+    for (int neighbour: graph.find(vertex)->second) {
+        if (visitedVertices.find(neighbour) == visitedVertices.end()) {
+            visitedVertices.insert(neighbour);
+            codeOfSubtree.emplace_back(codeOfVertexAHU(neighbour));
         }
     }
-    std::sort(stredKodu.begin(), stredKodu.end(), std::greater<std::string>());
-    std::stringstream kod;
-    kod << "0";
-    for (const std::string& kodPotomka : stredKodu) {
-        kod << kodPotomka;
+    std::sort(codeOfSubtree.begin(), codeOfSubtree.end(), std::greater<std::string>());
+    std::stringstream code;
+    code << "0";
+    for (const std::string& childVertexCode : codeOfSubtree) {
+        code << childVertexCode;
     }
 
-    kod << "1";
+    code << "1";
 
-    return kod.str();
+    return code.str();
 
 }
 
@@ -98,9 +98,9 @@ bool Tree::checkIsomorphism(Tree* tree2) {
     if (getRoots().size() != tree2->getRoots().size()) {
         return false;
     }
-    for (auto kod1 : getAHUcodes()) {
-        for (auto kod2 : tree2->getAHUcodes()) {
-            if (kod1 == kod2) {
+    for (auto code1 : getAHUcodes()) {
+        for (auto code2 : tree2->getAHUcodes()) {
+            if (code1 == code2) {
                 return true;
             }
         }

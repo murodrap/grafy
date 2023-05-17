@@ -10,6 +10,6 @@ file=${n}_${k}_3.erg;
 cat $file >> triedyKostier${k}-${n}.txt;
 rm $file;
 
-echo "trvanie celeho spracovania je $SECONDS sekund" >> triedyKostier${k}-${n}.txt
-echo "trvanie celeho spracovania je $SECONDS sekund";
+echo "Generating and processing finished after $SECONDS seconds" >> triedyKostier${k}-${n}.txt
+echo "Generating and processing finished after $SECONDS seconds";
 exit 0;

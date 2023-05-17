@@ -44,6 +44,6 @@ fi
 cat $file >> maxMinBireg${k}-${n}-${k2}.txt;
 rm $file;
 
-echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinBireg${k}-${n}-${k2}.txt
-echo "trvanie celeho spracovania je $SECONDS sekund";
+echo "Generating and processing finished after $SECONDS seconds" >> maxMinBireg${k}-${n}-${k2}.txt
+echo "Generating and processing finished after $SECONDS seconds";
 exit 0;

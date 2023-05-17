@@ -43,8 +43,8 @@ fi
 cat $file >> maxMinReg${k}-${n}.txt;
 rm $file;
 
-echo "trvanie celeho spracovania je $SECONDS sekund" >> maxMinReg${k}-${n}.txt
-echo "trvanie celeho spracovania je $SECONDS sekund";
+echo "Generating and processing finished after $SECONDS seconds" >> maxMinReg${k}-${n}.txt
+echo "Generating and processing finished after $SECONDS seconds";
 
 mv maxMinReg${k}-${n}.txt maxMinRegGirth${k}-${n}-${g}.txt;
 exit 0;

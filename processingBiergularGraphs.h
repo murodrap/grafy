@@ -27,7 +27,7 @@ public:
     {
         reg = reg12;
         n -= 1;
-        std::cout << reg << "-regularne na " << n << " vrcholoch, navyse " << reg2 << "-regularny" << std::endl;
+        std::cout << reg << "-regular graphs on " << n << " vertices, additional vertex of degree " << reg2 << std::endl;
         if (!GeneralFunctionsForGraphs::checkGraphExistence(n, reg, 1, reg2)) {
             counter.koniec();
             exit(1);

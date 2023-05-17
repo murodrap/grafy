@@ -18,7 +18,7 @@ public:
     : ColRegular(file, number, n2, reg12)
     , reg2(reg22)
     {
-        std::cout << "zberanie vysledkov pre biregularne graphs a " << number << " suborov" << std::endl;
+        std::cout << "Collecting results for biregular graphs in " << number << " files" << std::endl;
 
     };
 };

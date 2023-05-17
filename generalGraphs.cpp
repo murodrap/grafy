@@ -11,43 +11,43 @@
 
 
 bool GeneralFunctionsForGraphs::havelHakimi(int n1, int k1, int n2, int k2) {
-    std::vector<int> stupne;
+    std::vector<int> degrees;
     for (int i  = 0; i < n1; i++) {
-        stupne.push_back(k1);
+        degrees.push_back(k1);
     }
     for (int i  = 0; i < n2; i++) {
-        stupne.push_back(k2);
+        degrees.push_back(k2);
     }
-    std::sort(stupne.begin(), stupne.end(), std::greater<int>());
+    std::sort(degrees.begin(), degrees.end(), std::greater<int>());
 
     while (true){
-        if (stupne[0] == 0) {
+        if (degrees[0] == 0) {
             break;
         }
         
-        for (int i = 1; i <= stupne[0]; i++) {
-            if (stupne[i] == 0) {
+        for (int i = 1; i <= degrees[0]; i++) {
+            if (degrees[i] == 0) {
                 return false;
             }
-            stupne[i] -= 1;
+            degrees[i] -= 1;
         }
-        stupne[0] = 0;
-        std::sort(stupne.begin(), stupne.end(), std::greater<int>());
+        degrees[0] = 0;
+        std::sort(degrees.begin(), degrees.end(), std::greater<int>());
     }
     return true;
 }
 
 bool GeneralFunctionsForGraphs::checkGraphExistence(int n1, int k1, int n2, int k2){
     if (k1 > n1 + n2 || k2 > n1 + n2) {
-        std::cout << "nie je mozne vytvorit graph bez nasobnych hran" << std::endl;
+        std::cout << "It is not possible to create a graph without multiple edges" << std::endl;
         return false;
     }
     if ((n1 * k1 + n2 * k2) % 2) {
-        std::cout << "neparny sucet stupnov" << std::endl;
+        std::cout << "Odd sum of degrees" << std::endl;
         return false;
     }
     if (!havelHakimi(n1, k1, n2, k2)) {
-        std::cout << "nesedi havel hakimi" << std::endl;
+        std::cout << "It is not possible to construct a graph for this combination of n1, k1, n2 and k2" << std::endl;
         return false;
     }
     return true;
@@ -56,20 +56,17 @@ bool GeneralFunctionsForGraphs::checkGraphExistence(int n1, int k1, int n2, int 
 
 Edges GeneralFunctionsForGraphs::stringToEdges(std::string& listOfEdges) {
     Edges edges;
+    std::regex edgeRegex("[0-9]+, [0-9]+");
+    std::regex verticesRegex("([0-9]+), ([0-9]+)");
+    std::smatch edgesFromRegex;
+    std::smatch verticesFromRegex;
 
-    std::string znaky;
-
-    std::regex hranaRegex("[0-9]+, [0-9]+");
-    std::regex vrcholyRegex("([0-9]+), ([0-9]+)");
-    std::smatch hranyNajdene;
-    std::smatch vrcholyNajdene;
-
-    while (std::regex_search(listOfEdges, hranyNajdene, hranaRegex)) {
+    while (std::regex_search(listOfEdges, edgesFromRegex, edgeRegex)) {
    
-        std::string vr = hranyNajdene[0];
-        std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
-        std::string v = vrcholyNajdene[1];
-        std::string u = vrcholyNajdene[2];
+        std::string vr = edgesFromRegex[0];
+        std::regex_search(vr, verticesFromRegex, verticesRegex);
+        std::string v = verticesFromRegex[1];
+        std::string u = verticesFromRegex[2];
         int v1 = std::stoi(v);
         int u1 = std::stoi(u);
         if (v1 < u1) {
@@ -78,7 +75,7 @@ Edges GeneralFunctionsForGraphs::stringToEdges(std::string& listOfEdges) {
         else {
            edges.push_back({u1, v1}); 
         }
-        listOfEdges = hranyNajdene.suffix();
+        listOfEdges = verticesFromRegex.suffix();
     }
 
     return edges;
@@ -90,21 +87,19 @@ AdjList GeneralFunctionsForGraphs::stringToAdjList(std::string& listOfEdges, int
         adjList[v] = std::vector<int>();
     }
 
-    std::string znaky;
+    std::regex edgeRegex("[0-9]+, [0-9]+");
+    std::regex verticesRegex("([0-9]+), ([0-9]+)");
+    std::smatch edgesFromRegex;
+    std::smatch verticesFromRegex;
 
-    std::regex hranaRegex("[0-9]+, [0-9]+");
-    std::regex vrcholyRegex("([0-9]+), ([0-9]+)");
-    std::smatch hranyNajdene;
-    std::smatch vrcholyNajdene;
-
-    while (std::regex_search(listOfEdges, hranyNajdene, hranaRegex)) {
-        std::string vr = hranyNajdene[0];
-        std::regex_search(vr, vrcholyNajdene, vrcholyRegex);
-        int v = std::stoi(vrcholyNajdene[1]);
-        int u = std::stoi(vrcholyNajdene[2]);
+    while (std::regex_search(listOfEdges, edgesFromRegex, edgeRegex)) {
+        std::string vr = edgesFromRegex[0];
+        std::regex_search(vr, verticesFromRegex, verticesRegex);
+        int v = std::stoi(verticesFromRegex[1]);
+        int u = std::stoi(verticesFromRegex[2]);
         adjList[v].push_back(u);
         adjList[u].push_back(v);
-        listOfEdges = hranyNajdene.suffix();
+        listOfEdges = edgesFromRegex.suffix();
     }
 
     return adjList;
@@ -119,48 +114,48 @@ bool GeneralFunctionsForGraphs::isomorphicGraphs(std::string& g1, int n1, std::s
 
 bool GeneralFunctionsForGraphs::isomorphicGraphs(const AdjList& g1, int n1, const AdjList& g2, int n2) {
     Tree* graph1 = new Tree(g1, n1);
-    Tree* graf2 = new Tree(g2, n2);
-    bool vysl = graph1->checkIsomorphism(graf2);
+    Tree* graph2 = new Tree(g2, n2);
+    bool result = graph1->checkIsomorphism(graph2);
     delete graph1;
-    delete graf2;
-    return vysl;
+    delete graph2;
+    return result;
 }
 
 Edges GeneralFunctionsForGraphs::spanningTreeBFS(const AdjList& graph, int n) {
-    std::set<int> navstiveneVrchy = {0};
-    std::set<int> naPrejdenie = {0};
-    Edges hranyKostry;
+    std::set<int> visitedVertices = {0};
+    std::set<int> verticesToVisit = {0};
+    Edges spanningTreeEdges;
 
-    while (naPrejdenie.size()) {
-        std::set<int> noveNaPrejdenie;
-        for (int u : naPrejdenie) {
+    while (verticesToVisit.size()) {
+        std::set<int> newVerticesToVisit;
+        for (int u : verticesToVisit) {
             for (int v : graph.find(u)->second) {
-                if (navstiveneVrchy.find(v) == navstiveneVrchy.end()) {
-                    navstiveneVrchy.insert(v);
+                if (visitedVertices.find(v) == visitedVertices.end()) {
+                    visitedVertices.insert(v);
                     std::vector<int> edge ={u, v};
                     if (v < u) {
                         edge = {v, u};
                     }
-                    hranyKostry.push_back(edge);
-                    noveNaPrejdenie.insert(v);
+                    spanningTreeEdges.push_back(edge);
+                    newVerticesToVisit.insert(v);
                 }
             }
             
         }
-        naPrejdenie.clear();
-        naPrejdenie.insert(noveNaPrejdenie.begin(), noveNaPrejdenie.end());
-        noveNaPrejdenie.clear();
+        verticesToVisit.clear();
+        verticesToVisit.insert(newVerticesToVisit.begin(), newVerticesToVisit.end());
+        newVerticesToVisit.clear();
     }
 
-    return hranyKostry;
+    return spanningTreeEdges;
 }
 
 void GeneralFunctionsForGraphs::printGraph(const Edges& graph) {
         std::cout << "[";
-        bool prve = true;
+        bool firstEdge = true;
         for (auto edge : graph) {
-            if (prve) {
-                prve = false;
+            if (firstEdge) {
+                firstEdge = false;
             }
             else {
                 std::cout << ", ";
@@ -172,30 +167,30 @@ void GeneralFunctionsForGraphs::printGraph(const Edges& graph) {
 
 void GeneralFunctionsForGraphs::compareUnlabeledSpanningTrees(std::string& g1, int n1, std::string& g2, int n2) {
     auto edges1 = GeneralFunctionsForGraphs::stringToEdges(g1);
-    auto hrany2 = GeneralFunctionsForGraphs::stringToEdges(g2);
+    auto edges2 = GeneralFunctionsForGraphs::stringToEdges(g2);
     std::cout << "first graph: ";
-    const std::map<Tree*, int> triedyKostier1 = GeneralFunctionsForGraphs::generateAllSpanningTrees(edges1, n1, "kostryG1.txt");
+    const std::map<Tree*, int> isomorphismClasses1 = GeneralFunctionsForGraphs::generateAllSpanningTrees(edges1, n1, "kostryG1.txt");
     std::cout << "second graph: ";
-    const std::map<Tree*, int> triedyKostier2 = GeneralFunctionsForGraphs::generateAllSpanningTrees(hrany2, n2, "kostryG2.txt");
+    const std::map<Tree*, int> isomorphismClasses2 = GeneralFunctionsForGraphs::generateAllSpanningTrees(edges2, n2, "kostryG2.txt");
     std::cout << "unlabeled spanning trees present in both graphs:" << std::endl;
 
-    unsigned long long spolocne = 0;
-    for (auto it1 = triedyKostier1.begin(); it1 != triedyKostier1.end(); it1++) {
-        for (auto it2 = triedyKostier2.begin(); it2 != triedyKostier2.end(); it2++) {
+    unsigned long long numberOfSpanningTreesInCommom = 0;
+    for (auto it1 = isomorphismClasses1.begin(); it1 != isomorphismClasses1.end(); it1++) {
+        for (auto it2 = isomorphismClasses2.begin(); it2 != isomorphismClasses2.end(); it2++) {
             if (it1->first->checkIsomorphism(it2->first)) {
                 //std::cout << "izom\n";
-                spolocne++;
+                numberOfSpanningTreesInCommom++;
                 GeneralFunctionsForGraphs::printGraph(it1->first->getEdgesOfTree());
             }
         }
     }
 
-    for (auto it = triedyKostier1.begin(); it != triedyKostier1.end(); it++) {
+    for (auto it = isomorphismClasses1.begin(); it != isomorphismClasses1.end(); it++) {
         delete it->first;
     }
-    for (auto it = triedyKostier2.begin(); it != triedyKostier2.end(); it++) {
+    for (auto it = isomorphismClasses2.begin(); it != isomorphismClasses2.end(); it++) {
         delete it->first;
     }
-    std::cout << std::endl << spolocne << " total" << std::endl;
+    std::cout << std::endl << numberOfSpanningTreesInCommom << " total" << std::endl;
 }
 

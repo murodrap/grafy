@@ -25,16 +25,16 @@ int main(int argc, char *argv[])
         k2 = std::atoi(argv[4]);
     }
     else {
-        std::cout << "zly number argumentov" << std::endl;
+        std::cout << "Incorrect number of arguments" << std::endl;
         return 1;
     }
 
-    ProcBiregular spr(file, k, n, k2);
+    ProcBiregular pro(file, k, n, k2);
 
-    auto zaciatok = std::chrono::high_resolution_clock::now();
-    spr.processAll();
-    auto koniec = std::chrono::high_resolution_clock::now();
-    auto dlzka = std::chrono::duration_cast<std::chrono::seconds>(koniec - zaciatok).count();
+    auto start = std::chrono::high_resolution_clock::now();
+    pro.processAll();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto processingTime = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
-    std::cout << "spracovanie bolo ukoncene po " << dlzka << " sekundach\n";
+    std::cout << "Processing finished after " << processingTime << " seconds\n";
 }

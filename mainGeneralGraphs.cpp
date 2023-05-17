@@ -4,7 +4,7 @@
 
 #include "generalGraphs.h"
 
-void pocitanieKostier() {
+void spanningTreeCounting() {
   std::string graph;
   std::cout << "number of vertices: "; 
   std::getline(std::cin, graph);
@@ -18,9 +18,9 @@ void pocitanieKostier() {
   std::cout << "number of spanning trees in the graph is: " << GeneralFunctionsForGraphs::countSpanningTrees(graph, 0, n) << std::endl;
 }
 
-void izomorfizmus() {
+void isomorphism() {
   std::string graph1;
-  std::string graf2;
+  std::string graph2;
   std::cout << "number of vertices: "; 
   std::getline(std::cin, graph1);
   int n1 = std::stoi(graph1);
@@ -28,8 +28,8 @@ void izomorfizmus() {
   std::getline(std::cin, graph1);
 
   std::cout << "edge list of second graph: ";
-  std::getline(std::cin, graf2);
-  if (GeneralFunctionsForGraphs::isomorphicGraphs(graph1, n1, graf2, n1)) {
+  std::getline(std::cin, graph2);
+  if (GeneralFunctionsForGraphs::isomorphicGraphs(graph1, n1, graph2, n1)) {
     std::cout << "isomorphic" << std::endl;
   }
   else {
@@ -47,13 +47,13 @@ void generateAllSpanningTrees() {
   std::string file;
   std::cout << "name of output file: ";
   std::getline(std::cin, file);
-  const std::map<Tree*, int> triedy = GeneralFunctionsForGraphs::generateAllSpanningTrees(graph, n, file);
-  for (auto it = triedy.begin(); it != triedy.end(); it++) {
+  const std::map<Tree*, int> isomorphismClassses = GeneralFunctionsForGraphs::generateAllSpanningTrees(graph, n, file);
+  for (auto it = isomorphismClassses.begin(); it != isomorphismClassses.end(); it++) {
     delete it->first;
   }
 }
 
-void porovnanieKostier() {
+void compareSpanningTrees() {
   std::string graph1;
   std::string graf2;
   std::cout << "number of vertices: "; 
@@ -68,7 +68,7 @@ void porovnanieKostier() {
   GeneralFunctionsForGraphs::compareUnlabeledSpanningTrees(graph1, n1, graf2, n1);
 }
 
-void ponuka() {
+void menu() {
   std::cout << "===============================" << std::endl;
   std::cout << "spanning tree counting: 1" << std::endl;
   std::cout << "tree isomporphism: 2" << std::endl;
@@ -77,40 +77,40 @@ void ponuka() {
   std::cout << "exit: 5" << std::endl;
   std::cout << "===============================" << std::endl;
   
-  std::string vyber;
-  std::getline(std::cin, vyber);
+  std::string userInput;
+  std::getline(std::cin, userInput);
 
   try{
-    if (vyber == "1") {
-      pocitanieKostier();
+    if (userInput == "1") {
+      spanningTreeCounting();
     }
-    else if (vyber == "2") {
-      izomorfizmus();
+    else if (userInput == "2") {
+      isomorphism();
     }
-    else if (vyber == "3") {
+    else if (userInput == "3") {
       generateAllSpanningTrees();
     }
-    else if (vyber == "4") {
-      porovnanieKostier();
+    else if (userInput == "4") {
+      compareSpanningTrees();
     }
-    else if (vyber == "5") {
+    else if (userInput == "5") {
       exit(0);
     }
     else {
-      std::cout << "nepovoleny vyber" << std::endl;
+      std::cout << "invalid option" << std::endl;
     }
   }
   catch (...){
     std::cout << "input was in unsupported format, computations couldn't be completed" << std::endl;
-    ponuka();
+    menu();
   }
   std::cout << std::endl;
-  ponuka();
+  menu();
 }
 
 int main(int argc, char *argv[])
 {
-    ponuka();
+    menu();
 
     return 0;
 }

@@ -18,16 +18,6 @@ void Onete::fillDiag() {
     for (int i = 0; i < m; i++) {
         diag[i][i] = i+1;
     }
-
-    /*
-    std::cout << std::endl;
-    for (int i = 0; i < diag.size(); i++) {
-        for (int j  = 0; j < diag[0].size(); j++) {
-            std::cout << diag[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    */
 }
 
 
@@ -40,16 +30,6 @@ void Onete::fillRIncT() {
             rIncT[r][v2] = 1;
         }
     }   
-
-    /*
-    std::cout << std::endl;
-    for (int i = 0; i < rIncT.size(); i++) {
-        for (int j  = 0; j < rIncT[0].size(); j++) {
-            std::cout << rIncT[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    */
 }
 
 void Onete::matrixMultiplification() {
@@ -62,15 +42,6 @@ void Onete::matrixMultiplification() {
             u[i][j] = x;
         }
     }
-    /*
-    std::cout << std::endl;
-    for (int i = 0; i < u.size(); i++) {
-        for (int j  = 0; j < u[0].size(); j++) {
-            std::cout << u[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    */
 }
 
 void Onete::resetDataStructures() {
@@ -81,49 +52,48 @@ void Onete::resetDataStructures() {
     numberOfSpanningTrees = 0;
     deleteTrees();
     isomorphismClassesCardinality.clear();
-    
 }
 
 
 
 Edges Onete::evaluatePossibleTreeEdges(std::vector<int> rowIndices) {
     std::set<int> usedIndices;
-    std::vector<int> diagonala = std::vector<int>(n - 1);
+    std::vector<int> diagonal = std::vector<int>(n - 1);
     
-    bool vyhovujuciRiadok = false;
+    bool lineWithOneEntry = false;
     for (int i : rowIndices) {
         int number = 0;
         for (int j = 0; j < n - 1; j++) {
             if (u[i][j]) {
                 usedIndices.insert(u[i][j]);
                 number++;
-                diagonala[j] = 1;
+                diagonal[j] = 1;
             } 
         }
         if (number == 1) {
-            vyhovujuciRiadok = true;
+            lineWithOneEntry = true;
         }
     }
-    if (!vyhovujuciRiadok) {
+    if (!lineWithOneEntry) {
         return Edges();
     }
-    for (int nenulove : diagonala) {
-        if (!nenulove) {
+    for (int d : diagonal) {
+        if (!d) {
             return Edges();
         }
     }
 
-    Edges kostra;
-    kostra.reserve(n - 1);
+    Edges spanningTree;
+    spanningTree.reserve(n - 1);
 
-    for (int indexHrany : usedIndices) {
-        kostra.push_back(edges[indexHrany - 1]);
+    for (int edgeIndex : usedIndices) {
+        spanningTree.push_back(edges[edgeIndex - 1]);
     } 
-    return kostra;
+    return spanningTree;
 }
 
-void Onete::addNewSpanningTree(const Edges& kostra) {
-    Tree* s = new Tree(kostra, n);
+void Onete::addNewSpanningTree(const Edges& spanningTree) {
+    Tree* s = new Tree(spanningTree, n);
     if (s->getAHUcodes()[0].size() != n * 2) {
         delete s;
         return;
@@ -137,38 +107,28 @@ void Onete::addNewSpanningTree(const Edges& kostra) {
             return;
         }
     }
-    /*
-    for (int i = 0; i < triedyIzomorfizmu.size(); i++) {
-        if (triedyIzomorfizmu[i]->checkIsomorphism(s)) {
-            triedyPocty[i]++;
-            delete s;
-            return;
-        }
-    }
-    */
+
    isomorphismClassesCardinality[s] = 1;
-//triedyIzomorfizmu.emplace_back(s);
-  //  triedyPocty.push_back(1);
 }
 
 void Onete::generateCandidates(int edgesRemaining, std::vector<int>& usedIndices, int indexFrom) {
     if (!edgesRemaining) {
-        Edges kostra  = evaluatePossibleTreeEdges(usedIndices);
-            if (kostra.size()) {
-                addNewSpanningTree(kostra);
+        Edges spanningTree  = evaluatePossibleTreeEdges(usedIndices);
+            if (spanningTree.size()) {
+                addNewSpanningTree(spanningTree);
             }
         return;
     }
-    int sucInd = n - 1 - edgesRemaining;
+    int currentIndex = n - 1 - edgesRemaining;
     for (int i = indexFrom; i <= edges.size() - edgesRemaining; i++) {
-        usedIndices[sucInd] = i;
+        usedIndices[currentIndex] = i;
         generateCandidates(edgesRemaining - 1, usedIndices, i + 1);
     }
 }
 
-const std::map<Tree*, int> Onete::generateAllSpanningTrees(const Edges& hrany2) {
+const std::map<Tree*, int> Onete::generateAllSpanningTrees(const Edges& edges2) {
     resetDataStructures();
-    edges = std::move(hrany2);
+    edges = std::move(edges2);
     fillDiag();
     fillRIncT();
     matrixMultiplification();
@@ -181,17 +141,17 @@ const std::map<Tree*, int> Onete::generateAllSpanningTrees(const Edges& hrany2) 
     
 }
 
-void Onete::writeIsomorphismClassesToFile(std::string nazov) {
-    std::ofstream file(nazov);
+void Onete::writeIsomorphismClassesToFile(std::string nameOfFIle) {
+    std::ofstream file(nameOfFIle);
 
     file << numberOfSpanningTrees << " spanning trees, " << isomorphismClassesCardinality.size() << " isomorphism classes" << std::endl;
     for (auto it = isomorphismClassesCardinality.begin(); it != isomorphismClassesCardinality.end(); it++) {
         file << it->second << std::endl;
         file << "[";
-        bool prve = true;
+        bool firstEdge = true;
         for (auto edge : it->first->getEdgesOfTree()) {
-            if (prve) {
-                prve = false;
+            if (firstEdge) {
+                firstEdge = false;
             }
             else {
                 file << ", ";

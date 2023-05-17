@@ -61,25 +61,25 @@ long ProcRegular::podlaVzorca() {
 Edges ProcRegular::getEdges(const Lines& lines) {
     Edges edges(n*reg/2);
     int index = 0;
-    for (const std::string& riadok : lines) {
-        std::stringstream ss(riadok);
+    for (const std::string& line : lines) {
+        std::stringstream ss(line);
         std::string vertex;
-        std::string susedia;
+        std::string neighbours;
         
         getline(ss, vertex, ':');
         vertex.pop_back();
-        getline(ss, susedia, ':');
-        susedia.erase(0, 1);
+        getline(ss, neighbours, ':');
+        neighbours.erase(0, 1);
         
         int v = stoi(vertex);
-        std::string sused;  
-        std::stringstream ss2(susedia);
+        std::string neighbour;  
+        std::stringstream ss2(neighbours);
         while (!ss2.eof()) {
-            getline(ss2, sused, ' ');
-            if (!sused.size()) {
+            getline(ss2, neighbour, ' ');
+            if (!neighbour.size()) {
                 continue;
             }
-            int u = stoi(sused);
+            int u = stoi(neighbour);
             if (u > v) {
                 std::vector<int> edge(2);
                 edge[0] = v - 1;
@@ -97,10 +97,10 @@ void ProcRegular::graphsToFile(long long number, const std::vector<Edges>& graph
     
     for (const Edges& graph : graphs) {
         sub << "[";
-        bool prve = true;
+        bool firstEdge = true;
         for (const std::vector<int>& edge : graph) {
-            if (prve) {
-                prve = false;
+            if (firstEdge) {
+                firstEdge = false;
             }
             else {
                 sub << ", ";
@@ -124,32 +124,32 @@ void ProcRegular::writeToFile(){
 
 void ProcRegular::processGraph(const Lines& graph) {
     Edges edges = getEdges(graph);
-    long kostier = counter.countForGraph(edges);
-    updateValues(kostier, edges);
+    long long numberOfSpanningTrees = counter.countForGraph(edges);
+    updateValues(numberOfSpanningTrees, edges);
 }
 
 void ProcRegular::processAll() {
-    Lines vrcholy(n);
+    Lines adjacencyListLines(n);
     int index = 0;
-    std::string riadok;
-    bool zacatyGraf = false;
+    std::string line;
+    bool graphStarted = false;
    
-    while (std::getline(std::cin, riadok)) {
-        if (riadok[0] == 'G') {
-            zacatyGraf = true;
+    while (std::getline(std::cin, line)) {
+        if (line[0] == 'G') {
+            graphStarted = true;
         }
-        else if (!zacatyGraf || riadok.empty()) {
+        else if (!graphStarted || line.empty()) {
             continue;
         }
         
-        else if (zacatyGraf){
-            vrcholy.at(index) = riadok;
+        else if (graphStarted){
+            adjacencyListLines.at(index) = line;
             index++;
             
             if (index == n) {
-                processGraph(vrcholy);
+                processGraph(adjacencyListLines);
                 index = 0;
-                zacatyGraf = false;
+                graphStarted = false;
             }
         }
     }

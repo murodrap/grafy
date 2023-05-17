@@ -44,7 +44,7 @@ public:
     , n(n2)
     , reg(reg2)
     {
-        std::cout << "zberanie vysledkov pre " << number << " suborov" << std::endl;
+        std::cout << "collecting results from " << number << " files" << std::endl;
 
     };
     void collectResults();

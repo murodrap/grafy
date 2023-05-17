@@ -20,10 +20,10 @@ using Lines = std::vector<std::string>;
 void ProcBiregular::edgeCombinations(int remaining, int indexFrom, const Edges& edges, Edges& currentEdges, std::vector<int>& usedVertices, std::set<std::vector<int>>& edgesResult) {
     
     if (!remaining) {
-        Edges hranyGrafu = Edges((n*reg + reg2) / 2);
-        copy(edgesResult.begin(), edgesResult.end(), hranyGrafu.begin());
-        long long kostrier = counter.countForGraph(hranyGrafu);
-        updateValues(kostrier, hranyGrafu);
+        Edges currentGraphEdges = Edges((n*reg + reg2) / 2);
+        copy(edgesResult.begin(), edgesResult.end(), currentGraphEdges.begin());
+        long long numberOfSpannigTrees = counter.countForGraph(currentGraphEdges);
+        updateValues(numberOfSpannigTrees, currentGraphEdges);
         return;
     }
     if (remaining > edges.size() - indexFrom) {
@@ -65,13 +65,13 @@ bool ProcBiregular::multipleEdgeCheck(int u, int v, std::vector<int>& usedVertic
 
 void ProcBiregular::processGraph(const Lines& graph) {
     Edges edges = getEdges(graph);
-    Edges najdene; 
-    std::vector<int> vrchy = std::vector<int>(n);
-    std::set<std::vector<int>> pouzite;
+    Edges usedEdges; 
+    std::vector<int> usedVert = std::vector<int>(n);
+    std::set<std::vector<int>> currentGraph;
     for (auto edge : edges) {
-        pouzite.insert(edge);
+        currentGraph.insert(edge);
     }
-    edgeCombinations(reg2/2, 0, edges, najdene, vrchy, pouzite);
+    edgeCombinations(reg2/2, 0, edges, usedEdges, usedVert, currentGraph);
     
 }
 

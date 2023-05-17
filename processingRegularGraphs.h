@@ -43,10 +43,10 @@ public:
     , fileTo(file)
     , counter(SpanningTreeCounter(n, reg))
     {
-        std::cout << reg << "-regularne graphs na " << n << " vrcholoch do suboru "<< file << std::endl;
+        std::cout << reg << "-regular graphs on " << n << " vertices to file "<< file << std::endl;
 
         if (!fileTo.is_open()) {
-            std::cout << "Nepodarilo sa vytvorit file a zapisat donho vysledky" << std::endl;
+            std::cout << "Failed to open output file and write the results" << std::endl;
             exit(1);
         }
     };

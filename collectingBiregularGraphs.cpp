@@ -15,17 +15,17 @@
 
 void ColBiregular::writeToFile() {
 
-    std::stringstream kamUkladat;
-    kamUkladat << "maxMinBireg" << reg << "-" << n << "-" << reg2 << "-" << numberOfFiles << ".txt";
-    std::ofstream subor2;
-    subor2.open (kamUkladat.str());
-    if (subor2.is_open()) {
-        graphsToFile("min", minK, minG, subor2);
-        graphsToFile("max", maxK, maxG, subor2);
-        subor2.close();
+    std::stringstream nameOfFIle;
+    nameOfFIle << "maxMinBireg" << reg << "-" << n << "-" << reg2 << "-" << numberOfFiles << ".txt";
+    std::ofstream file2;
+    file2.open (nameOfFIle.str());
+    if (file2.is_open()) {
+        graphsToFile("min", minK, minG, file2);
+        graphsToFile("max", maxK, maxG, file2);
+        file2.close();
     }
     else {
-        std::cout << "Nepodarilo sa vytvorit file a zapisat donho vysledky";
+        std::cout << "Falied to open output file and to write the results";
     }
     
 }

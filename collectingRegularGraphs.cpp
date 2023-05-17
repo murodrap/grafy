@@ -54,73 +54,73 @@ void ColRegular::graphsToFile(std::string type, unsigned long long number, const
 
 void ColRegular::writeToFile() {
 
-    std::stringstream kamUkladat;
-    kamUkladat << "maxMinReg" << reg << "-" << n << "-" << numberOfFiles << ".txt";
-    std::ofstream subor2;
-    subor2.open (kamUkladat.str());
-    if (subor2.is_open()) {
-        graphsToFile("min", minK, minG, subor2);
-        graphsToFile("max", maxK, maxG, subor2);
-        subor2.close();
+    std::stringstream nameOfFile;
+    nameOfFile << "maxMinReg" << reg << "-" << n << "-" << numberOfFiles << ".txt";
+    std::ofstream file2;
+    file2.open (nameOfFile.str());
+    if (file2.is_open()) {
+        graphsToFile("min", minK, minG, file2);
+        graphsToFile("max", maxK, maxG, file2);
+        file2.close();
     }
     else {
-        std::cout << "Nepodarilo sa vytvorit file a zapisat donho vysledky";
+        std::cout << "Failed to open file " << nameOfFile.str() << " and to write the results" << std::endl;
     }
     
 }
 
 std::pair<long long, const Graphs> ColRegular::readResults(std::ifstream& file) {
-    std::string riadok;
-    std::string kus;
-    std::getline(file, riadok);
-    std::istringstream iss(riadok);
-    long long kostier;
-    int pocetGrafov;
-    iss >> kus;
-    if (kus == "0") {
+    std::string line;
+    std::string max_min;
+    std::getline(file, line);
+    std::istringstream iss(line);
+    long long numberOfSpanningTrees;
+    int numberOfGraphs;
+    iss >> max_min;
+    if (max_min == "0") {
         return std::make_pair(0, Graphs());
     }
-    iss >> pocetGrafov;
-    iss >> kostier;
+    iss >> numberOfGraphs;
+    iss >> numberOfSpanningTrees;
     Graphs graphs = Graphs();
-    graphs.reserve(pocetGrafov);
+    graphs.reserve(numberOfGraphs);
     
-    for (int i = 0; i < pocetGrafov; i++) {
+    for (int i = 0; i < numberOfGraphs; i++) {
         std::string graph;
         std::getline(file, graph);
         graphs.emplace_back(graph);
     }
     
-    return std::make_pair(kostier, std::move(graphs));
+    return std::make_pair(numberOfSpanningTrees, std::move(graphs));
 }
 
 
 void ColRegular::getResultsFromFile(int fileNumber) {
     std::ifstream file;
 
-    std::stringstream meno;
-    meno << fileFrom << "-" << fileNumber;
-    file.open(meno.str());
+    std::stringstream nameOfFile;
+    nameOfFile << fileFrom << "-" << fileNumber;
+    file.open(nameOfFile.str());
     if (!file.is_open()) {
-        std::cout << "nepodarilo sa otvorit file " << meno.str() << std::endl;
+        std::cout << "Failed to open file " << nameOfFile.str() << std::endl;
         return;
     }
 
-    std::pair<long long, const Graphs> vyslG = readResults(file);
-    long long kostier = vyslG.first;
-    if (kostier == 0) {
+    std::pair<long long, const Graphs> results = readResults(file);
+    long long numberOfSpanningTrees = results.first;
+    if (numberOfSpanningTrees == 0) {
         file.close();
         return;
     }
-    const Graphs& graphs = vyslG.second;
+    const Graphs& graphs = results.second;
 
-    updateMin(kostier, graphs);
+    updateMin(numberOfSpanningTrees, graphs);
 
-    std::pair<long long, const Graphs> vyslG2 = readResults(file);
-    long long kostier2 = vyslG2.first;
-    const Graphs& grafy2 = vyslG2.second;
+    std::pair<long long, const Graphs> results2 = readResults(file);
+    long long numberOfSpanningTrees2 = results2.first;
+    const Graphs& graphs2 = results2.second;
 
-    updateMax(kostier2, grafy2);
+    updateMax(numberOfSpanningTrees2, graphs2);
    
     file.close();
 }

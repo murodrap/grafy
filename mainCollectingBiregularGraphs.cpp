@@ -7,14 +7,14 @@ int main(int argc, char *argv[])
 {
     
     if (argc != 6) {
-        std::cout << "zly number argumentov" << std::endl;
+        std::cout << "Incorrect number of arguments" << std::endl;
         return 1;
     }
 
     std::string file(argv[1]);
 
-    ColBiregular spr(file, std::atoi(argv[2]), std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]));
-    spr.collectResults();
+    ColBiregular col(file, std::atoi(argv[2]), std::atoi(argv[3]), std::atoi(argv[4]), std::atoi(argv[5]));
+    col.collectResults();
 
     return 0;
 }

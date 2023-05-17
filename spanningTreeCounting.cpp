@@ -13,36 +13,32 @@ using Edges = std::vector<std::vector<int>>;
 
 double SpanningTreeCounter::maxValue(int number) {
 
-    double najdene[2] {0., 0.};
+    double currentMax[2] {0., 0.};
     for (int i = 0; i < number; i++) {
         
         double p = pairs[i][0];
         double d = pairs[i][1];
         
-        if (p > najdene[0]) {
-            najdene[0] = p;
-            najdene[1] = d;
+        if (p > currentMax[0]) {
+            currentMax[0] = p;
+            currentMax[1] = d;
         }
-        else if (p == najdene[0] && d > najdene[1]) {
-            najdene[0] = p;
-            najdene[1] = d;
+        else if (p == currentMax[0] && d > currentMax[1]) {
+            currentMax[0] = p;
+            currentMax[1] = d;
         }
    }
 
-    return najdene[1];
+    return currentMax[1];
 }
 
 
 long long SpanningTreeCounter::gauss(int n) {
     int r1 = 0;
     int s1 = 0;
-    int nas = 0;
-
 
     while (r1 < n && s1 < n) {
             double iMax;
-
-            std::vector<std::vector<double>> hodnoty(n-r1);
 
             for (int i = r1; i < n; i++) {
                 pairs[i-r1][0] = (double)std::abs(matrix[i][s1]);
@@ -56,8 +52,6 @@ long long SpanningTreeCounter::gauss(int n) {
 
             else {
                 std::swap(matrix[r1], matrix[(int)iMax]);
-                nas *= -1;
-
                 for (int i = r1+1; i < n; i++) {
                     double f = matrix[i][s1] / matrix[r1][s1];
                     matrix[i][s1] = 0.;
@@ -71,18 +65,18 @@ long long SpanningTreeCounter::gauss(int n) {
             s1++;
         }
             
-        double vysl = 1.;
+        double result = 1.;
         for (int i = 0; i < n; i++) {
-            vysl *= matrix[i][i];
+            result *= matrix[i][i];
         }
 
-    return llabs(llround(vysl));
+    return llabs(llround(result));
 
 
 }
 
 long long SpanningTreeCounter::kofaktor(int n, int r, int s) {
-    return (long long) (pow(-1, r+s) * SpanningTreeCounter::gauss(n-1));
+    return pow(-1, r+s) * SpanningTreeCounter::gauss(n-1);
 }
 
 long long SpanningTreeCounter::countForGraph(const Edges& edges) {
