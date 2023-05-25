@@ -29,7 +29,6 @@ public:
         n -= 1;
         std::cout << reg << "-regular graphs on " << n << " vertices, additional vertex of degree " << reg2 << std::endl;
         if (!GeneralFunctionsForGraphs::checkGraphExistence(n, reg, 1, reg2)) {
-            counter.koniec();
             exit(1);
         }
     };

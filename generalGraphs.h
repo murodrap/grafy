@@ -25,7 +25,6 @@ class GeneralFunctionsForGraphs
         static long long countSpanningTrees(const Edges& edges, int reg, int n) {
             SpanningTreeCounter counter = SpanningTreeCounter(n, reg);
             long long kostier = counter.countForGraph(edges);
-            counter.koniec();
             return kostier;
             
         }

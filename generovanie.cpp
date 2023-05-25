@@ -127,5 +127,4 @@ void Generator::generovanie() {
     Edges h;
     vsetkyGrafy(stupne, h, spojenia);
     writeToFile();
-    counter.koniec();
 }

@@ -156,6 +156,4 @@ void ProcRegular::processAll() {
 
     writeToFile();
     fileTo.close();
-    counter.koniec();
-
 }

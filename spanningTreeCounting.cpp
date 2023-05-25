@@ -8,7 +8,7 @@
 #include <string.h>
 #include "spanningTreeCounting.h"
 
-using Matica = std::vector<std::vector<double>>;
+using Matrix = std::vector<std::vector<double>>;
 using Edges = std::vector<std::vector<int>>;
 
 double SpanningTreeCounter::maxValue(int number) {
@@ -81,7 +81,7 @@ long long SpanningTreeCounter::kofaktor(int n, int r, int s) {
 
 long long SpanningTreeCounter::countForGraph(const Edges& edges) {
     for (int i= 0; i < n-1; i++) {
-        memset(matrix[i], 0, (n - 1)*sizeof(*matrix[i]));
+        std::fill(matrix[i].begin(), matrix[i].end(), 0.0);
     }
    
 
