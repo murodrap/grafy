@@ -14,6 +14,13 @@
 
 using Edges = std::vector<std::vector<int>>;
 
+/**
+ * checks whether the given graph doesn't have equal or lower/higher nuber of spanning trees that the currently stored min/max values
+ * updates the according values if necessary
+ *
+ * @param number lines with adjacency lists for s graph in string format
+ * @param edges lines with adjacency lists for s graph in string format
+ */
 void ProcRegular::updateValues(long long number, const Edges& edges) {
 
     if (number == maxK) {
@@ -58,6 +65,12 @@ long ProcRegular::podlaVzorca() {
     return trunc(pow(24, 2)) * stvorkove;
 }
 
+/**
+ * parses string with adjacency lists to obtain edge list
+ *
+ * @param lines lines with adjacency lists for s graph in string format
+ * @return edge list, represented as two dimensional vector, of the given graph
+ */
 Edges ProcRegular::getEdges(const Lines& lines) {
     Edges edges(n*reg/2);
     int index = 0;
@@ -92,6 +105,13 @@ Edges ProcRegular::getEdges(const Lines& lines) {
     return edges;
 }
 
+/**
+ * writes results to file for a specified set of graphs
+ *
+ * @param number number of spanning trees of given graphs
+ * @param graphs edge lists of graphs to write to file
+ * @param sub file stream to write to
+ */
 void ProcRegular::graphsToFile(long long number, const std::vector<Edges>& graphs, std::ofstream& sub) {
     sub <<  graphs.size() << " " << number << "\n";
     
@@ -114,6 +134,9 @@ void ProcRegular::graphsToFile(long long number, const std::vector<Edges>& graph
 
 }
 
+/**
+ * writes results to output file, first for graphs with minimum and maximum number of spanning trees
+ */
 void ProcRegular::writeToFile(){
     fileTo << "min ";
     graphsToFile(minK, minG, fileTo);
@@ -122,12 +145,21 @@ void ProcRegular::writeToFile(){
 
 }
 
+
+/**
+ * cumputes number of spanning trees for a given graph and updates max/min data structures
+ *
+ * @param graph lines with adjacency lists for s graph in string format
+ */
 void ProcRegular::processGraph(const Lines& graph) {
     Edges edges = getEdges(graph);
     long long numberOfSpanningTrees = counter.countForGraph(edges);
     updateValues(numberOfSpanningTrees, edges);
 }
 
+/**
+ * reads and processes all graphs from std in
+ */
 void ProcRegular::processAll() {
     Lines adjacencyListLines(n);
     int index = 0;

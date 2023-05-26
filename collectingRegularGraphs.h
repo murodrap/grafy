@@ -33,7 +33,7 @@ protected:
     long long maxK = 1;
     long long minK = LLONG_MAX;
 
-    void graphsToFile(std::string type, unsigned long long number, const Graphs& graphs, std::ofstream& file);
+    void graphsToFile(std::string type, long long number, const Graphs& graphs, std::ofstream& file);
 
 public:
 

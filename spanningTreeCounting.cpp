@@ -11,6 +11,12 @@
 using Matrix = std::vector<std::vector<double>>;
 using Edges = std::vector<std::vector<int>>;
 
+/**
+ * finds pair with highes values overall
+ *
+ * @param number index of the element to consider
+ * @return second element from the pair with max values
+ */
 double SpanningTreeCounter::maxValue(int number) {
 
     double currentMax[2] {0., 0.};
@@ -32,7 +38,12 @@ double SpanningTreeCounter::maxValue(int number) {
     return currentMax[1];
 }
 
-
+/**
+ * cumputes determinant of matrix of size n x n using Gauss elimination
+ *
+ * @param n dimensions of matrix
+ * @return determinant of matrix
+ */
 long long SpanningTreeCounter::gauss(int n) {
     int r1 = 0;
     int s1 = 0;
@@ -75,10 +86,23 @@ long long SpanningTreeCounter::gauss(int n) {
 
 }
 
+/**
+ * cumputes cofactor of matrix with specified row and column for removal
+ *
+ * @param r, s index of removed row and column
+ * @param n dimensions of matrix
+ * @return cofactor of matrix
+ */
 long long SpanningTreeCounter::kofaktor(int n, int r, int s) {
     return pow(-1, r+s) * SpanningTreeCounter::gauss(n-1);
 }
 
+/**
+ * counts number of spanning trees in a graph
+ *
+ * @param edges edge list of a graph whose spanning trees are counted
+ * @return number of spanning trees of the given graph
+ */
 long long SpanningTreeCounter::countForGraph(const Edges& edges) {
     for (int i= 0; i < n-1; i++) {
         std::fill(matrix[i].begin(), matrix[i].end(), 0.0);

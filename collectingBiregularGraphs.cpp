@@ -13,6 +13,9 @@
 #include "collectingBiregularGraphs.h"
 #include "collectingRegularGraphs.h"
 
+/**
+ * writes the final results to output file
+ */
 void ColBiregular::writeToFile() {
 
     std::stringstream nameOfFIle;
