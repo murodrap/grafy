@@ -14,13 +14,18 @@
 using Edges = std::vector<std::vector<int>>;
 using Matica = std::vector<std::vector<int>>;
 
+/**
+ * fills Diag matrix with values for the current graph
+ */
 void Onete::fillDiag() {
     for (int i = 0; i < m; i++) {
         diag[i][i] = i+1;
     }
 }
 
-
+/**
+ * fills RIncT matrix with values based on the edge list of the current graph
+ */
 void Onete::fillRIncT() {
     for (int r = 0; r < m; r++) {
         int v1 = edges[r][0];
@@ -32,6 +37,9 @@ void Onete::fillRIncT() {
     }   
 }
 
+/**
+ * multiplies Diag and RIncT, storing the results in matrix u
+ */
 void Onete::matrixMultiplification() {
     for (int i = 0; i < m; i++) {
         for (int j  = 0; j < n - 1; j++) {
@@ -44,6 +52,9 @@ void Onete::matrixMultiplification() {
     }
 }
 
+/**
+ * sets values in all matrices to zero, clears other data structures
+ */
 void Onete::resetDataStructures() {
     for (int r = 0; r < m; r++) {
         std::fill(rIncT[r].begin(), rIncT[r].end(), 0);
@@ -54,8 +65,12 @@ void Onete::resetDataStructures() {
     isomorphismClassesCardinality.clear();
 }
 
-
-
+/**
+ * checks whether given rows hold possible spanning tree
+ *
+ * @param rowIndices list of indices of rows used for construction of tree
+ * @return edge list of a candidate spanning tree
+ */
 Edges Onete::evaluatePossibleTreeEdges(std::vector<int> rowIndices) {
     std::set<int> usedIndices;
     std::vector<int> diagonal = std::vector<int>(n - 1);
@@ -92,6 +107,11 @@ Edges Onete::evaluatePossibleTreeEdges(std::vector<int> rowIndices) {
     return spanningTree;
 }
 
+/**
+ * checks whether given edge set is a tree set, if so, it is used to update isomorphismClaaasesCardinality structure
+ *
+ * @param spanningTree edge set of a candidate for sa spanning tree
+ */
 void Onete::addNewSpanningTree(const Edges& spanningTree) {
     Tree* s = new Tree(spanningTree, n);
     if (s->getAHUcodes()[0].size() != n * 2) {
@@ -111,6 +131,13 @@ void Onete::addNewSpanningTree(const Edges& spanningTree) {
    isomorphismClassesCardinality[s] = 1;
 }
 
+/**
+ * generates candidate sets of n-1 edges, which are then tested for being a tree and used to update the isomorphism classes data structure
+ *
+ * @param edgesRemaining how many edges remains to n-1
+ * @param usedIndices indices of u matrix that hold data for one possible spanning tree
+ * @param indexFrom index from which to start considering possible rows of u matrix in this call of the method
+ */
 void Onete::generateCandidates(int edgesRemaining, std::vector<int>& usedIndices, int indexFrom) {
     if (!edgesRemaining) {
         Edges spanningTree  = evaluatePossibleTreeEdges(usedIndices);
@@ -126,6 +153,12 @@ void Onete::generateCandidates(int edgesRemaining, std::vector<int>& usedIndices
     }
 }
 
+/**
+ * for a given graph, generates all its spanning trees and sorts them into isomorphism classes
+ *
+ * @param edges2 edge list of the graph to work with
+ * @return map where unlabeled sapnning trees are keys and their corresponding values is the number of labeled spanning trees isomorphic with this tree
+ */
 const std::map<Tree*, int> Onete::generateAllSpanningTrees(const Edges& edges2) {
     resetDataStructures();
     edges = std::move(edges2);
@@ -141,6 +174,11 @@ const std::map<Tree*, int> Onete::generateAllSpanningTrees(const Edges& edges2) 
     
 }
 
+/**
+ * wrtites info about spanning trees of the current graph, for each isomorphism class, one representant is printed, together with the cardinality of the class 
+ *
+ * @param nameOfFile name of file to write to
+ */
 void Onete::writeIsomorphismClassesToFile(std::string nameOfFIle) {
     std::ofstream file(nameOfFIle);
 

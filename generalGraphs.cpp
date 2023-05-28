@@ -9,7 +9,13 @@
 #include "generalGraphs.h"
 #include "isomorphismAHU.h"
 
-
+/**
+ * uses havel-hakimi theorem to decide whether a graph with given degrees can be constructed
+ *
+ * @param n1, n2 number of vertices of degree k1, k2 respectively
+ * @param k1, k2 degrees of vertices in possible graphs
+ * @return true if there exist graph with given pair of degrees, false otherwise
+ */
 bool GeneralFunctionsForGraphs::havelHakimi(int n1, int k1, int n2, int k2) {
     std::vector<int> degrees;
     for (int i  = 0; i < n1; i++) {
@@ -37,6 +43,13 @@ bool GeneralFunctionsForGraphs::havelHakimi(int n1, int k1, int n2, int k2) {
     return true;
 }
 
+/**
+ * determines whether a graph with given degrees can be constructed
+ *
+ * @param n1, n2 number of vertices of degree k1, k2 respectively
+ * @param k1, k2 degrees of vertices in possible graphs
+ * @return true if there exist graph with given pair of degrees, false otherwise
+ */
 bool GeneralFunctionsForGraphs::checkGraphExistence(int n1, int k1, int n2, int k2){
     if (k1 > n1 + n2 || k2 > n1 + n2) {
         std::cout << "It is not possible to create a graph without multiple edges" << std::endl;
@@ -53,7 +66,12 @@ bool GeneralFunctionsForGraphs::checkGraphExistence(int n1, int k1, int n2, int 
     return true;
 }
 
-
+/**
+ * parses strings with adjacency lists of a graph and constucts its edge list
+ *
+ * @param listOfEdges strings with adjaceny list of a graph, each string contains list for one vertex
+ * @return edge list of the given graph
+ */
 Edges GeneralFunctionsForGraphs::stringToEdges(std::string& listOfEdges) {
     Edges edges;
     std::regex edgeRegex("[0-9]+, [0-9]+");
@@ -81,6 +99,13 @@ Edges GeneralFunctionsForGraphs::stringToEdges(std::string& listOfEdges) {
     return edges;
 }
 
+/**
+ * transforms strings with adjacency list of a graph to adjacency list implemented by map
+ *
+ * @param listOfEdges strings with adjaceny list of a graph, each string contains list for one vertex
+ * @param n number of vertices of the graph
+ * @return adjacency list of the given graph, keys in the maps are vertices
+ */
 AdjList GeneralFunctionsForGraphs::stringToAdjList(std::string& listOfEdges, int n) {
     AdjList adjList;
     for (int v = 0; v < n; v++) {
@@ -106,12 +131,26 @@ AdjList GeneralFunctionsForGraphs::stringToAdjList(std::string& listOfEdges, int
 
 }
 
+/**
+ * decides whether two trees are isomorphic
+ *
+ * @param g1, g2 strings with adjacency lists of the fist and second tree
+ * @param n1, n2 number of vertices of both trees
+ * @return true if the graphs are isomorphic, false otherwise
+ */
 bool GeneralFunctionsForGraphs::isomorphicGraphs(std::string& g1, int n1, std::string& g2, int n2) {
     const AdjList adj1 = stringToAdjList(g1, n1);
     const AdjList adj2 = stringToAdjList(g2, n2);
     return isomorphicGraphs(adj1, n1, adj2, n2);
 }
 
+/**
+ * decides whether two trees are isomorphic
+ *
+ * @param g1, g2 adjacency lists, represented by map, of the fist and second tree
+ * @param n1, n2 number of vertices of both trees
+ * @return true if the graphs are isomorphic, false otherwise
+ */
 bool GeneralFunctionsForGraphs::isomorphicGraphs(const AdjList& g1, int n1, const AdjList& g2, int n2) {
     Tree* graph1 = new Tree(g1, n1);
     Tree* graph2 = new Tree(g2, n2);
@@ -121,6 +160,13 @@ bool GeneralFunctionsForGraphs::isomorphicGraphs(const AdjList& g1, int n1, cons
     return result;
 }
 
+/**
+ * uses BFS to construct spanning tree of a given graph
+ *
+ * @param graph adjacency list of the graph
+ * @param n number of vertices of the graph
+ * @return edge list of te first spanning tree constructed by BFS
+ */
 Edges GeneralFunctionsForGraphs::spanningTreeBFS(const AdjList& graph, int n) {
     std::set<int> visitedVertices = {0};
     std::set<int> verticesToVisit = {0};
@@ -150,6 +196,11 @@ Edges GeneralFunctionsForGraphs::spanningTreeBFS(const AdjList& graph, int n) {
     return spanningTreeEdges;
 }
 
+/**
+ * prints edge list of a given graph to standard output
+ *
+ * @param graph edge list of the graph
+ */
 void GeneralFunctionsForGraphs::printGraph(const Edges& graph) {
         std::cout << "[";
         bool firstEdge = true;
@@ -165,6 +216,12 @@ void GeneralFunctionsForGraphs::printGraph(const Edges& graph) {
         std::cout << "]" << std::endl;
 }
 
+/**
+ * compares unlabeled soanning trees of tow given graphs, prints the trees that are present in both graphs
+ *
+ * @param g1, g2 strings with adjacency lists of the fist and second graph
+ * @param n1, n2 number of vertices of the both graphs
+ */
 void GeneralFunctionsForGraphs::compareUnlabeledSpanningTrees(std::string& g1, int n1, std::string& g2, int n2) {
     auto edges1 = GeneralFunctionsForGraphs::stringToEdges(g1);
     auto edges2 = GeneralFunctionsForGraphs::stringToEdges(g2);

@@ -12,6 +12,12 @@
 #include "isomorphismAHU.h"
 
 
+/**
+ * for given root, computes code of the tree using AHU algorithm
+ *
+ * @param root vertex used for rooting non-oriented tree
+ * @return characteristic code of tree rooted in given vertex
+ */
 std::string Tree::codeOfTreeAHU(int root) {
     visitedVertices.clear();
     visitedVertices.insert(root);
@@ -19,6 +25,12 @@ std::string Tree::codeOfTreeAHU(int root) {
 
 }
 
+/**
+ * finds one of the possible most distant vertices from initial vertex
+ *
+ * @param v initial vertex
+ * @return pair where first element is most distant vertex from v, the other is list of vertices on the path to this vertex
+ */
 std::pair<int, std::vector<int>> Tree::mostDistantVertex(int v) {
     std::vector<int> c = {v};
     std::vector<std::pair<int, std::vector<int>>> nextVertices = {std::make_pair(v, c)};
@@ -52,6 +64,11 @@ std::pair<int, std::vector<int>> Tree::mostDistantVertex(int v) {
     return previousVertices[0];
 }
 
+/**
+ * finds all possible central vertices of a tree
+ *
+ * @return vector with all possible roots of the tree
+ */
 std::vector<int> Tree::rootsSearch() {
 
     int x = 0;
@@ -67,6 +84,12 @@ std::vector<int> Tree::rootsSearch() {
 
 }
 
+/**
+ * computes code of a subtree with specified root
+ * 
+ * @param vertex root of the current subtree
+ * @return code of subtree rooted in given vertex
+ */
 std::string Tree::codeOfVertexAHU(int vertex) {
 
     std::vector<std::string> codeOfSubtree;
@@ -89,7 +112,12 @@ std::string Tree::codeOfVertexAHU(int vertex) {
 
 }
 
-
+/**
+ * decides, using AHU algorithm, whether a given tree is ispomorphic with the current tree
+ *
+ * @param tree2 pointer to the other tree
+ * @return true if the threes are isomorphic, false othervise
+ */
 bool Tree::checkIsomorphism(Tree* tree2) {
     if (tree2->getNumberOfVertices() != getNumberOfVertices()) {
         return false;
