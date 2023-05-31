@@ -10,22 +10,22 @@ graphsFunctions is run with no arguments, it has command line interfae with simp
 Among the source code, there are bash scripts for generating and processing regular graphs. They should be set to be executable by users by adding execute permissions to each file. 
 Here are command runnint the scripts with needed arguments
 
-regularSerial n k
+**regularSerial n k**
 -generates all k-regular graphs on n vertices, stores the graphs with the least and most spanning trees to maxMinReg<k>-<n>.txt
 
-regularParalel j n k
+**regularParalel j n k**
 -the same functionality as the previous script, only the generation and processing is split into j parts, the results are written to maxMinReg<k>-<n>-<j>.txt
 
-biregularSerial n k k2
+**biregularSerial n k k2**
 -generates all biregular graphs on n+1 vertices where n vertices are of degree k and one is of degree k2, stores the graphs with the least and most spanning trees to maxMinBireg<k>-<n>-<k2>.txt
 
-biregularParalel j n k k2
+**biregularParalel j n k k2**
 -the same functionality as the previous script, only the generation and processing is split into j parts, the results are written to maxMinBireg<k>-<n>-<k2>-<j>.txt
 
-regularGirthSerial n k t
+**regularGirthSerial n k t**
 -generates all k-regular graphs on n vertices with girst at least t, stores the graphs with the least and most spanning trees to maxMinRegGirth<k>-<n>-<t>.txt
 
-regularGirthParalel j n k t
+**regularGirthParalel j n k t**
 -the same functionality as the previous script, only the generation and processing is split into j parts, the results are written to maxMinRegGirth<k>-<n>-<j>.txt
 
 The functionality of these scripts is described in detail in the Implementaion chapter of the bachelor thesis.
