@@ -9,7 +9,7 @@
 
 
 class ProcRegular {
-    int maxStroredGraphs = 1000;
+    unsigned int maxStroredGraphs = 1000;
 
     
     using Edges = std::vector<std::vector<int>>;

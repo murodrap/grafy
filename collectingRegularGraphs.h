@@ -11,7 +11,7 @@ class ColRegular {
     
     
 
-    int maxStroredGraphs = 1000;
+    unsigned int maxStroredGraphs = 1000;
 
     using Graphs = std::vector<std::string>;
     
@@ -24,10 +24,11 @@ class ColRegular {
     virtual void getResultsFromFile(int fileNumber);
 
 protected:
+    std::string fileFrom;
+    int numberOfFiles;
     int n;
     int reg;
-    int numberOfFiles;
-    std::string fileFrom;
+
     Graphs maxG;
     Graphs minG;
     long long maxK = 1;

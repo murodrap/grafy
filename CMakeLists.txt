@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22)
 SET(CMAKE_INSTALL_PREFIX .)
 
 project(pocitanieKostier
-    DESCRIPTION "bla"
+    DESCRIPTION "graphs"
     LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE)

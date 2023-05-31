@@ -11,8 +11,9 @@ using AdjList = std::map<int, std::vector<int>>;
 
 class Tree {
     AdjList graph;
-    int n;
+    
     Edges edges;
+    int n;
 
     std::vector<int> roots;
     std::vector<std::string> codes;

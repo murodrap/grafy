@@ -108,7 +108,7 @@ void menu() {
   menu();
 }
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv[]*/)
 {
     menu();
 

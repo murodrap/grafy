@@ -28,7 +28,7 @@ using Lines = std::vector<std::string>;
  * @param usedVertices data structure storing info about which vertices vere affected by edge removal
  * @param edgesResult edge list of the new resulting graph
  */
-void ProcBiregular::edgeCombinations(int remaining, int indexFrom, const Edges& edges, Edges& currentEdges, std::vector<int>& usedVertices, std::set<std::vector<int>>& edgesResult) {
+void ProcBiregular::edgeCombinations(unsigned int remaining, int indexFrom, const Edges& edges, Edges& currentEdges, std::vector<int>& usedVertices, std::set<std::vector<int>>& edgesResult) {
     
     if (!remaining) {
         Edges currentGraphEdges = Edges((n*reg + reg2) / 2);
@@ -40,7 +40,7 @@ void ProcBiregular::edgeCombinations(int remaining, int indexFrom, const Edges& 
     if (remaining > edges.size() - indexFrom) {
         return;
     }
-    for (int i = indexFrom; i <= edges.size() - remaining; i++) {
+    for (unsigned int i = indexFrom; i <= edges.size() - remaining; i++) {
         int v = edges[i][0];
         int u = edges[i][1];
        

@@ -93,9 +93,8 @@ Edges GeneralFunctionsForGraphs::stringToEdges(std::string& listOfEdges) {
         else {
            edges.push_back({u1, v1}); 
         }
-        listOfEdges = verticesFromRegex.suffix();
+        listOfEdges = edgesFromRegex.suffix();
     }
-
     return edges;
 }
 
@@ -167,7 +166,7 @@ bool GeneralFunctionsForGraphs::isomorphicGraphs(const AdjList& g1, int n1, cons
  * @param n number of vertices of the graph
  * @return edge list of te first spanning tree constructed by BFS
  */
-Edges GeneralFunctionsForGraphs::spanningTreeBFS(const AdjList& graph, int n) {
+Edges GeneralFunctionsForGraphs::spanningTreeBFS(const AdjList& graph) {
     std::set<int> visitedVertices = {0};
     std::set<int> verticesToVisit = {0};
     Edges spanningTreeEdges;

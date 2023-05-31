@@ -16,7 +16,7 @@ class ProcBiregular : public ProcRegular{
     using Lines = std::vector<std::string>;
 
     bool multipleEdgeCheck(int u, int v, std::vector<int>& usedVertices);
-    void edgeCombinations(int remaining, int indexFrom, const Edges& edges, Edges& currentEdges, std::vector<int>& usedVertices, std::set<std::vector<int>>& edgesResult);
+    void edgeCombinations(unsigned int remaining, int indexFrom, const Edges& edges, Edges& currentEdges, std::vector<int>& usedVertices, std::set<std::vector<int>>& edgesResult);
     void processGraph(const Lines& graph) override;
 
 

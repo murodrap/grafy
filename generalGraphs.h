@@ -34,9 +34,9 @@ class GeneralFunctionsForGraphs
         static bool isomorphicGraphs(std::string& g1, int n1, std::string& g2, int n2);
 
         static Edges spanningTreeBFS(std::string& edges, int n) {
-            return spanningTreeBFS(stringToAdjList(edges, n), n);
+            return spanningTreeBFS(stringToAdjList(edges, n));
         }
-        static Edges spanningTreeBFS(const AdjList& graph, int n);
+        static Edges spanningTreeBFS(const AdjList& graph);
 
         static const std::map<Tree*, int> generateAllSpanningTrees(const Edges& edges, int n, const std::string& fileTo) {
             Onete o = Onete(n, edges.size());
@@ -46,6 +46,7 @@ class GeneralFunctionsForGraphs
             return triedy;
         }
         static const std::map<Tree*, int> generateAllSpanningTrees(std::string& edges, int n, const std::string& fileTo) {
+            std::cout << edges << std::endl;
             return generateAllSpanningTrees(stringToEdges(edges), n, fileTo);
         }
         static void compareUnlabeledSpanningTrees(std::string& g1, int n1, std::string& g2, int n2);

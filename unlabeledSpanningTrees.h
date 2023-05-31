@@ -13,8 +13,8 @@ using Edges = std::vector<std::vector<int>>;
 using Matica = std::vector<std::vector<int>>;
 
 class Onete {
-    int n;
-    int m;
+    unsigned int n;
+    unsigned int m;
     Edges edges;
 
     Matica rIncT;
@@ -33,7 +33,7 @@ class Onete {
     void resetDataStructures();
     Edges evaluatePossibleTreeEdges(std::vector<int> rowIndices);
     void addNewSpanningTree(const Edges& kostra);
-    void generateCandidates(int edgesRemaining, std::vector<int>& usedIndices, int indexFrom);
+    void generateCandidates(unsigned int edgesRemaining, std::vector<int>& usedIndices, unsigned int indexFrom);
 
 
 
@@ -44,7 +44,7 @@ class Onete {
             rIncT.reserve(m);
             diag.reserve(m);
             u.reserve(m);
-            for (int i = 0; i < m; i++) {
+            for (unsigned int i = 0; i < m; i++) {
                 rIncT.push_back(std::vector<int>(n - 1));
                 diag.push_back(std::vector<int>(m));
                 u.push_back(std::vector<int>(n - 1));

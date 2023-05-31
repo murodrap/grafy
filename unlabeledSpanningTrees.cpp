@@ -1,4 +1,3 @@
-#pragma once
 #include <stdio.h>
 #include <vector>
 #include <string>
@@ -18,7 +17,7 @@ using Matica = std::vector<std::vector<int>>;
  * fills Diag matrix with values for the current graph
  */
 void Onete::fillDiag() {
-    for (int i = 0; i < m; i++) {
+    for (unsigned int i = 0; i < m; i++) {
         diag[i][i] = i+1;
     }
 }
@@ -27,9 +26,9 @@ void Onete::fillDiag() {
  * fills RIncT matrix with values based on the edge list of the current graph
  */
 void Onete::fillRIncT() {
-    for (int r = 0; r < m; r++) {
-        int v1 = edges[r][0];
-        int v2 = edges[r][1];
+    for (unsigned int r = 0; r < m; r++) {
+        unsigned int v1 = edges[r][0];
+        unsigned int v2 = edges[r][1];
         rIncT[r][v1] = 1;
         if (v2 < n - 1) {
             rIncT[r][v2] = 1;
@@ -41,10 +40,10 @@ void Onete::fillRIncT() {
  * multiplies Diag and RIncT, storing the results in matrix u
  */
 void Onete::matrixMultiplification() {
-    for (int i = 0; i < m; i++) {
-        for (int j  = 0; j < n - 1; j++) {
+    for (unsigned int i = 0; i < m; i++) {
+        for (unsigned int j  = 0; j < n - 1; j++) {
             int x = 0;
-            for (int xi = 0; xi < m; xi++) {
+            for (unsigned int xi = 0; xi < m; xi++) {
                 x += diag[i][xi] * rIncT[xi][j];
             }
             u[i][j] = x;
@@ -56,7 +55,7 @@ void Onete::matrixMultiplification() {
  * sets values in all matrices to zero, clears other data structures
  */
 void Onete::resetDataStructures() {
-    for (int r = 0; r < m; r++) {
+    for (unsigned int r = 0; r < m; r++) {
         std::fill(rIncT[r].begin(), rIncT[r].end(), 0);
         std::fill(u[r].begin(), u[r].end(), 0);
     }
@@ -78,7 +77,7 @@ Edges Onete::evaluatePossibleTreeEdges(std::vector<int> rowIndices) {
     bool lineWithOneEntry = false;
     for (int i : rowIndices) {
         int number = 0;
-        for (int j = 0; j < n - 1; j++) {
+        for (unsigned int j = 0; j < n - 1; j++) {
             if (u[i][j]) {
                 usedIndices.insert(u[i][j]);
                 number++;
@@ -138,7 +137,7 @@ void Onete::addNewSpanningTree(const Edges& spanningTree) {
  * @param usedIndices indices of u matrix that hold data for one possible spanning tree
  * @param indexFrom index from which to start considering possible rows of u matrix in this call of the method
  */
-void Onete::generateCandidates(int edgesRemaining, std::vector<int>& usedIndices, int indexFrom) {
+void Onete::generateCandidates(unsigned int edgesRemaining, std::vector<int>& usedIndices, unsigned int indexFrom) {
     if (!edgesRemaining) {
         Edges spanningTree  = evaluatePossibleTreeEdges(usedIndices);
             if (spanningTree.size()) {
@@ -146,8 +145,8 @@ void Onete::generateCandidates(int edgesRemaining, std::vector<int>& usedIndices
             }
         return;
     }
-    int currentIndex = n - 1 - edgesRemaining;
-    for (int i = indexFrom; i <= edges.size() - edgesRemaining; i++) {
+    unsigned int currentIndex = n - 1 - edgesRemaining;
+    for (unsigned int i = indexFrom; i <= edges.size() - edgesRemaining && i < edges.size(); i++) {
         usedIndices[currentIndex] = i;
         generateCandidates(edgesRemaining - 1, usedIndices, i + 1);
     }
