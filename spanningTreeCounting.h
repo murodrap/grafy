@@ -3,7 +3,7 @@
 #include <vector>
 #include <climits>
 #include <string>
-using Matrix = std::vector<std::vector<double>>;
+using Matrix = std::vector<std::vector<long double>>;
 
 
 class SpanningTreeCounter
@@ -13,9 +13,9 @@ class SpanningTreeCounter
     //double **matrix = nullptr;
     Matrix matrix;
     //double **pairs = nullptr;
-    std::vector<std::vector<double>> pairs;
+    std::vector<std::vector<long double>> pairs;
 
-    double maxValue(int number);
+    long double maxValue(int number);
 
     long long gauss(int n);
     long long kofaktor(int n, int r, int s);
@@ -31,8 +31,8 @@ public:
         pairs.reserve(n - 1);
         matrix.reserve(n - 1);
         for (int i = 0; i < n - 1; i++) {
-            pairs.emplace_back(std::vector<double>(2));
-            matrix.emplace_back(std::vector<double>(n - 1));
+            pairs.emplace_back(std::vector<long double>(2));
+            matrix.emplace_back(std::vector<long double>(n - 1));
         }
     }
 };

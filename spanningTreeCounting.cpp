@@ -6,9 +6,11 @@
 #include <iostream>
 #include <iomanip>
 #include <string.h>
+#include <iomanip>
+
 #include "spanningTreeCounting.h"
 
-using Matrix = std::vector<std::vector<double>>;
+using Matrix = std::vector<std::vector<long double>>;
 using Edges = std::vector<std::vector<int>>;
 
 /**
@@ -17,13 +19,13 @@ using Edges = std::vector<std::vector<int>>;
  * @param number index of the element to consider
  * @return second element from the pair with max values
  */
-double SpanningTreeCounter::maxValue(int number) {
+long double SpanningTreeCounter::maxValue(int number) {
 
-    double currentMax[2] {0., 0.};
+    long double currentMax[2] {0., 0.};
     for (int i = 0; i < number; i++) {
         
-        double p = pairs[i][0];
-        double d = pairs[i][1];
+        long double p = pairs[i][0];
+        long double d = pairs[i][1];
         
         if (p > currentMax[0]) {
             currentMax[0] = p;
@@ -49,11 +51,11 @@ long long SpanningTreeCounter::gauss(int n) {
     int s1 = 0;
 
     while (r1 < n && s1 < n) {
-            double iMax;
+            long double iMax;
 
             for (int i = r1; i < n; i++) {
-                pairs[i-r1][0] = (double)std::abs(matrix[i][s1]);
-                pairs[i-r1][1] = (double)i;
+                pairs[i-r1][0] = (long double)std::abs(matrix[i][s1]);
+                pairs[i-r1][1] = (long double)i;
             }
             iMax = maxValue(n - r1);
             
@@ -64,7 +66,7 @@ long long SpanningTreeCounter::gauss(int n) {
             else {
                 std::swap(matrix[r1], matrix[(int)iMax]);
                 for (int i = r1+1; i < n; i++) {
-                    double f = matrix[i][s1] / matrix[r1][s1];
+                    long double f = matrix[i][s1] / matrix[r1][s1];
                     matrix[i][s1] = 0.;
                     for (int j = s1+1; j < n; j++) {
                         matrix[i][j] -= matrix[r1][j] * f;
@@ -76,12 +78,14 @@ long long SpanningTreeCounter::gauss(int n) {
             s1++;
         }
             
-        double result = 1.;
+        long double result = 1.;
         for (int i = 0; i < n; i++) {
             result *= matrix[i][i];
         }
-
-    return llabs(llround(result));
+    //std::cout << std::setprecision (15) << result << std::endl;
+    //std::cout << result << "----" << llabs(result) << std::endl;
+   
+    return llabs(result);
 
 
 }
@@ -94,7 +98,7 @@ long long SpanningTreeCounter::gauss(int n) {
  * @return cofactor of matrix
  */
 long long SpanningTreeCounter::kofaktor(int n, int r, int s) {
-    return pow(-1, r+s) * SpanningTreeCounter::gauss(n-1);
+    return SpanningTreeCounter::gauss(n-1);
 }
 
 /**
@@ -125,7 +129,7 @@ long long SpanningTreeCounter::countForGraph(const Edges& edges) {
 
     if (reg) {
         for (int r = 0; r < n-1; r++) {
-            matrix[r][r] = (double)reg;
+            matrix[r][r] = (long double)reg;
         }
     }
 
